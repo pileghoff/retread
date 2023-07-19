@@ -85,6 +85,7 @@ impl UninitializedState {
             Some(req) => req,
             None => return AppState::Uninitialized(self),
         };
+        info!("Got: {:?}", request);
 
         match request.command {
             Command::Initialize(_) => {
@@ -241,6 +242,7 @@ impl RunningState {
             Some(req) => req,
             None => return AppState::Running(self),
         };
+        info!("Got: {:?}", request);
 
         match request.command {
             Command::Next(_) | Command::StepIn(_) | Command::StepOut(_) => {
