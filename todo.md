@@ -5,9 +5,9 @@
   - If all breakpoints are in log, don't bother searching
 - Better settings:
   - Multiple glob patterns
+  - Allow using compile_commands.json
 - Documentation
 - Vscode extension
-  - Ask for log file
   - Show log message (maybe just by inspection the variable)
 - Release building
   - Retread binary (cross platform)
