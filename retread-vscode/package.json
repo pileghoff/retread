@@ -35,7 +35,7 @@
       {
         "type": "retread",
         "label": "Retread: Log Replay Debugger",
-        "program": "/home/pil/projects/retread/target/release/retread",
+        "program": "./dist/retread",
         "configurationAttributes": {
           "launch": {
             "required": [
@@ -45,7 +45,7 @@
               "log_file": {
                 "type": "string",
                 "description": "Absolute path to a log file file.",
-                "default": "${workspaceFolder}/${command:AskForLog}"
+                "default": "${command:AskForLog}"
               }
             }
           }

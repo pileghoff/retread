@@ -12,3 +12,4 @@
 - Release building
   - Retread binary (cross platform)
   - Vscode extension
+    - Bundle cross platform version of Retread.
