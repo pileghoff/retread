@@ -1,0 +1,22 @@
+[package]
+name = "retread"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+log = "0.4.0"
+log-panics = { version = "2", features = ["with-backtrace"]}
+dap = { path = "../dap-rs/dap"}
+anyhow = "*"
+serde = "*"
+serde_json = "1.*"
+glob = "0.3.1"
+regex = "1.9"
+thiserror = "1.0"
+lcs = "0.2.0"
+rayon = "1.7.0"
+lazy_static = "1.4.0"
+crossbeam = "0.8.2"
+moka = "0.11"

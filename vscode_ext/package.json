@@ -1,0 +1,84 @@
+{
+  "name": "mock-debug",
+  "displayName": "Mock Debug",
+  "version": "0.24.0",
+  "publisher": "...",
+  "description": "Starter extension for developing debug adapters for VS Code.",
+  "author": {
+    "name": "...",
+    "email": "..."
+  },
+  "categories": ["Debuggers"],
+"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint \"src/**/*.ts\"",
+		"watch": "tsc -watch -p ./"
+	},
+	"devDependencies": {
+		"@types/node": "^16.18.34",
+		"@types/vscode": "^1.73.0",
+		"@typescript-eslint/eslint-plugin": "^5.42.0",
+		"@typescript-eslint/parser": "^5.42.0",
+		"eslint": "^8.26.0",
+		"typescript": "^5.1.3"
+	
+	},
+  "main": "./dist/extension.js",
+
+  "contributes": {
+    "breakpoints": [],
+    "debuggers": [
+      {
+        "type": "retread",
+        "label": "Retread: Log Replay Debugger",
+
+        "program": "/home/pil/projects/retread/target/debug/retread",
+
+        "configurationAttributes": {
+          "launch": {
+            "required": ["log_file"],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Absolute path to a text file.",
+                "default": "${workspaceFolder}/${command:AskForProgramName}"
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "description": "Automatically stop after launch.",
+                "default": true
+              }
+            }
+          }
+        },
+
+        "initialConfigurations": [
+          {
+            "type": "retread",
+            "request": "launch",
+            "name": "Ask for file name",
+            "program": "",
+            "stopOnEntry": true
+          }
+        ],
+
+        "configurationSnippets": [
+          {
+            "label": "Retread: Launch",
+            "description": "A new configuration for launching a mock debug program",
+            "body": {
+              "type": "retread",
+              "request": "launch",
+              "name": "${2:Launch Program}",
+              "program": "^\"\\${workspaceFolder}/${1:Program}\""
+            }
+          }
+        ]
+
+      }
+    ]
+  },
+
+  "activationEvents": ["onDebug"]
+}
