@@ -1,20 +1,18 @@
-use std::io::{stdin, stdout, BufReader, BufWriter, Stdin, Stdout};
+use std::fs;
 use std::thread::spawn;
 use std::time::Instant;
-use std::{fs, thread};
 
 use dap::base_message::Sendable;
+use dap::events::*;
 use dap::requests::*;
 use dap::responses::*;
 use dap::types::*;
-use dap::{events::*, requests};
 use regex::Regex;
 use serde_json::Value;
 
 use crate::{dap_server, log_search::*};
 
-use anyhow::{anyhow, Context, Error, Result};
-use std::sync::mpsc::{channel, Receiver, TryRecvError};
+use anyhow::{anyhow, Context, Result};
 
 #[derive(Clone, Debug)]
 struct RetreadBreakpoint {
@@ -344,11 +342,6 @@ impl RunningState {
                         line: Some(log_match.line as i64),
                         ..Default::default()
                     };
-                    let s = request
-                        .clone()
-                        .success(ResponseBody::Scopes(ScopesResponse {
-                            scopes: vec![scope.clone()],
-                        }));
                     dap_server::write(Sendable::Response(request.success(ResponseBody::Scopes(
                         ScopesResponse {
                             scopes: vec![scope],
@@ -412,4 +405,3 @@ impl App {
         };
     }
 }
-
