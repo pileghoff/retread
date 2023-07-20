@@ -10,6 +10,4 @@
 - Vscode extension
   - Show log message (maybe just by inspection the variable)
 - Release building
-  - Retread binary (cross platform)
-  - Vscode extension
-    - Bundle cross platform version of Retread.
+  - Add cross-platform builds
