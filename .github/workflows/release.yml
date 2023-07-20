@@ -2,33 +2,29 @@ name: Rust
 
 on:
   push:
-    tags: 
-      - '*'
+    tags:
+      - "*"
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: '20'
-    - name: Cargo Build
-      run: cargo build --verbose --release
-    - name: Extension 
-      run: npm install -g @vscode/vsce
-      run: mkdir ./retread-vscode/out && cp ./target/release/retread ./retread-vscode/out
-      run: cd retread-vscode && yes | vsce package $GITHUB_REF_NAME
-    - name: Release with Notes
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          ./target/release/retread 
-          ./retread-vscode/*.vsix
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+      - run: cargo build --verbose --release
+      - run: npm install -g @vscode/vsce
+      - run: mkdir ./retread-vscode/out && cp ./target/release/retread ./retread-vscode/out
+      - run: cd retread-vscode && yes | vsce package $GITHUB_REF_NAME
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./target/release/retread 
+            ./retread-vscode/*.vsix
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
