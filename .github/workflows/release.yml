@@ -25,10 +25,10 @@ jobs:
       run: mkdir ./retread-vscode/out && cp ./target/release/retread ./retread-vscode/out
       run: cd retread-vscode && yes | vsce package $GITHUB_REF_NAME
     - name: Release with Notes
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            ./target/release/retread 
-            ./retread-vscode/*.vsix
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./target/release/retread 
+          ./retread-vscode/*.vsix
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
