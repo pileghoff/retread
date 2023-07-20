@@ -19,6 +19,7 @@ jobs:
           node-version: "20"
       - run: cargo build --verbose --release
       - run: npm install -g @vscode/vsce
+      - run: npm i --save-dev esbuild
       - run: mkdir ./retread-vscode/out && cp ./target/release/retread ./retread-vscode/out
       - run: cd retread-vscode && yes | vsce package $GITHUB_REF_NAME
       - uses: softprops/action-gh-release@v1
