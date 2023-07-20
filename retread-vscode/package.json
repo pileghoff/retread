@@ -35,7 +35,7 @@
       {
         "type": "retread",
         "label": "Retread: Log Replay Debugger",
-        "program": "../target/release/retread",
+        "program": "./out/retread",
         "configurationAttributes": {
           "launch": {
             "required": [
