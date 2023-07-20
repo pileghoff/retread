@@ -45,7 +45,7 @@
         "configurationAttributes": {
           "launch": {
             "required": [
-              "log_file"
+              "log_file", "log_pattern", "include"
             ],
             "properties": {
               "log_file": {
@@ -59,8 +59,11 @@
         "initialConfigurations": [
           {
             "type": "retread",
+            "name": "Retread",
             "request": "launch",
-            "log_file": "${command:AskForLog}"
+            "log_file": "${command:AskForLog}",
+            "log_pattern": "Insert regex",
+            "include": "Insert glob pattern for source files"
           }
         ],
         "configurationSnippets": [
@@ -69,8 +72,11 @@
             "description": "",
             "body": {
               "type": "retread",
+              "name": "Retread",
               "request": "launch",
-              "log_file": "${command:AskForLog}"
+              "log_file": "${command:AskForLog}",
+              "log_pattern": "Insert regex",
+              "include": "Insert glob pattern for source files"
             }
           }
         ],
