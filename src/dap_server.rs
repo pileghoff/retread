@@ -1,5 +1,6 @@
 use crossbeam::channel::unbounded;
 use crossbeam::channel::Receiver;
+use crossbeam::channel::Sender;
 use crossbeam::channel::TryReadyError;
 use crossbeam::channel::TryRecvError;
 use std::io::{stdin, stdout, BufReader, BufWriter, Stdin, Stdout};
@@ -19,12 +20,21 @@ lazy_static! {
     static ref SERVER: DapServer = DapServer::new();
 }
 
+#[cfg(not(feature = "test-server"))]
 struct DapServer {
     outgoing: Mutex<StdServer>,
-    incomming: Receiver<Request>,
+    incoming: Receiver<Request>,
+}
+#[cfg(feature = "test-server")]
+struct DapServer {
+    from_server: Receiver<Request>,
+    to_server: Sender<Sendable>,
+    to_client: Sender<Request>,
+    from_client: Receiver<Sendable>,
 }
 
 impl DapServer {
+    #[cfg(not(feature = "test-server"))]
     pub fn new() -> Self {
         let (tx, rx) = unbounded::<Request>();
         spawn(move || {
@@ -44,24 +54,61 @@ impl DapServer {
         let server = Server::new(BufReader::new(stdin()), BufWriter::new(stdout()));
         DapServer {
             outgoing: Mutex::new(server),
-            incomming: rx,
+            incoming: rx,
+        }
+    }
+
+    #[cfg(feature = "test-server")]
+    pub fn new() -> Self {
+        let (to_client, from_server) = unbounded::<Request>();
+        let (to_server, from_client) = unbounded::<Sendable>();
+        Self {
+            to_client,
+            from_client,
+            to_server,
+            from_server,
         }
     }
 }
 
+#[cfg(not(feature = "test-server"))]
 pub fn read() -> Option<Request> {
-    match SERVER.incomming.try_recv() {
+    match SERVER.incoming.try_recv() {
         Ok(req) => Some(req),
         Err(TryRecvError::Disconnected) => None,
         Err(TryRecvError::Empty) => None,
     }
 }
 
+#[cfg(not(feature = "test-server"))]
 pub fn write(message: Sendable) {
     SERVER.outgoing.lock().unwrap().send(message).unwrap();
 }
 
-pub fn restart() {
-    let server = Server::new(BufReader::new(stdin()), BufWriter::new(stdout()));
-    *SERVER.outgoing.lock().unwrap() = server;
+#[cfg(feature = "test-server")]
+pub fn read() -> Option<Request> {
+    match SERVER.from_server.try_recv() {
+        Ok(req) => Some(req),
+        Err(TryRecvError::Disconnected) => None,
+        Err(TryRecvError::Empty) => None,
+    }
+}
+
+#[cfg(feature = "test-server")]
+pub fn write(message: Sendable) {
+    SERVER.to_server.send(message).unwrap();
+}
+
+#[cfg(feature = "test-server")]
+pub fn read_server() -> Option<Sendable> {
+    match SERVER.from_client.try_recv() {
+        Ok(req) => Some(req),
+        Err(TryRecvError::Disconnected) => None,
+        Err(TryRecvError::Empty) => None,
+    }
+}
+
+#[cfg(feature = "test-server")]
+pub fn write_server(message: Request) {
+    SERVER.to_client.send(message).unwrap();
 }

@@ -36,14 +36,15 @@ impl RetreadBreakpoint {
     }
 }
 
-enum AppState {
+#[derive(Clone, Debug)]
+pub enum AppState {
     Uninitialized(UninitializedState),
     Running(RunningState),
-    Restart,
     Exit,
 }
 
-struct UninitializedState {
+#[derive(Clone, Debug)]
+pub struct UninitializedState {
     settings: Option<LogSearchSettings>,
 }
 
@@ -123,7 +124,8 @@ impl UninitializedState {
     }
 }
 
-struct RunningState {
+#[derive(Clone, Debug)]
+pub struct RunningState {
     settings: LogSearchSettings,
     log_index: usize,
     breakpoints: Vec<RetreadBreakpoint>,
@@ -385,10 +387,6 @@ impl RunningState {
                 dap_server::write(Sendable::Response(request.ack().unwrap()));
                 return AppState::Exit;
             }
-            Command::Restart(_) => {
-                dap_server::write(Sendable::Response(request.ack().unwrap()));
-                return AppState::Restart;
-            }
 
             _ => panic!("Unhandled request"),
         }
@@ -396,7 +394,7 @@ impl RunningState {
     }
 }
 pub struct App {
-    state: AppState,
+    pub state: AppState,
 }
 
 impl App {
@@ -406,17 +404,12 @@ impl App {
         }
     }
 
-    pub fn app_loop(mut self) {
-        loop {
-            self.state = match self.state {
-                AppState::Uninitialized(s) => s.run(),
-                AppState::Running(s) => s.run(),
-                AppState::Exit => return,
-                AppState::Restart => {
-                    dap_server::restart();
-                    AppState::Uninitialized(UninitializedState::new())
-                }
-            }
-        }
+    pub fn app_loop(&mut self) {
+        self.state = match self.state.clone() {
+            AppState::Uninitialized(s) => s.run(),
+            AppState::Running(s) => s.run(),
+            AppState::Exit => return,
+        };
     }
 }
+

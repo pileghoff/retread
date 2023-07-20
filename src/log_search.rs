@@ -140,11 +140,17 @@ lazy_static! {
 pub fn search_files(search_params: &LogSearchSettings, log_line: &str) -> Option<LogMatch> {
     let cache = SEARCH_CACHE.clone();
     cache.get_with(log_line.to_string(), || {
-        let files = glob(&search_params.include).ok()?;
+        let mut files = glob(&search_params.include).ok()?;
         let search_options = LogLineSearch::new(&search_params.log_pattern, log_line).ok()?;
 
         let matches = files
             .flatten()
+            .filter(|f| {
+                if let Some(file) = &search_options.file {
+                    return f.to_str().unwrap() == file;
+                }
+                true
+            })
             .flat_map(|f| best_match_in_file(f.to_str().unwrap(), &search_options));
 
         matches.max_by(|a, b| a.score.cmp(&b.score))
