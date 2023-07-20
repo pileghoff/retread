@@ -1,8 +1,14 @@
 {
   "name": "Retread",
   "displayName": "Retread",
-  "description": "",
-  "version": "0.0.1",
+  "description": "Retread is a debug adapter that allows you to replay log files in your IDE or editor of choice.",
+  "publisher": "Pil Eghoff",
+  "license": "GPL-2.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pileghoff/retread.git"
+  },
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.79.0"
   },
@@ -54,8 +60,7 @@
           {
             "type": "retread",
             "request": "launch",
-            "name": "Ask for file name",
-            "stopOnEntry": true
+            "log_file": "${command:AskForLog}"
           }
         ],
         "configurationSnippets": [
@@ -65,7 +70,7 @@
             "body": {
               "type": "retread",
               "request": "launch",
-              "name": "${2:Launch Program}"
+              "log_file": "${command:AskForLog}"
             }
           }
         ],
