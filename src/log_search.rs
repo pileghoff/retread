@@ -139,6 +139,10 @@ lazy_static! {
 
 pub fn search_files(search_params: &LogSearchSettings, log_line: &str) -> Option<LogMatch> {
     let cache = SEARCH_CACHE.clone();
+
+    #[cfg(feature = "test-server")]
+    cache.invalidate_all();
+
     cache.get_with(log_line.to_string(), || {
         let mut files = glob(&search_params.include).ok()?;
         let search_options = LogLineSearch::new(&search_params.log_pattern, log_line).ok()?;

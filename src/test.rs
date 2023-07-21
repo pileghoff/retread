@@ -3,10 +3,13 @@ mod dap_logger;
 mod dap_server;
 mod log_search;
 
+use std::collections::HashMap;
+use std::fs;
 use std::time::Instant;
 
 use dap::requests::Command::*;
 use dap::requests::*;
+use regex::Regex;
 use serde_json::Map;
 
 use dap::base_message::Sendable;
@@ -22,13 +25,12 @@ extern crate log;
 fn main() {
     test_breakpoints_10_lines();
     test_breakpoints_10_lines_and_func();
+    test_breakpoints_in_source_lines();
 }
 
-fn run_test(additional_data: Map<String, Value>) {
-    let mut app = App::init();
-
-    let req = Request {
-        seq: 1,
+fn gen_init(seq: i64) -> Request {
+    Request {
+        seq,
         command: Initialize(InitializeArguments {
             client_id: Some("test".to_string()),
             client_name: Some("test".to_string()),
@@ -46,50 +48,93 @@ fn run_test(additional_data: Map<String, Value>) {
             supports_memory_event: Some(true),
             supports_args_can_be_interpreted_by_shell: Some(true),
         }),
-    };
-    dap_server::write_server(req);
-    let req = Request {
-        seq: 2,
+    }
+}
+
+fn gen_launch(seq: i64, additional_data: Map<String, Value>) -> Request {
+    Request {
+        seq,
         command: Launch(LaunchRequestArguments {
             no_debug: None,
             restart_data: None,
             additional_data: Some(serde_json::Value::Object(additional_data)),
         }),
-    };
+    }
+}
 
-    dap_server::write_server(req);
-    let req = Request {
-        seq: 3,
-        command: SetBreakpoints(SetBreakpointsArguments {
-            source: dap::types::Source {
-                name: Some("linux.log".to_string()),
-                path: Some("./linux.log".to_string()),
-                source_reference: None,
-                presentation_hint: None,
-                origin: None,
-                sources: None,
-                adapter_data: None,
-                checksums: None,
-            },
-            breakpoints: Some(vec![SourceBreakpoint {
-                line: 10,
-                column: None,
-                condition: None,
-                hit_condition: None,
-                log_message: None,
-            }]),
-            lines: None,
-            source_modified: Some(false),
-        }),
-    };
-    dap_server::write_server(req);
-    let req = Request {
+struct Breakpoint {
+    pub path: String,
+    pub line: i64,
+}
+
+fn gen_breakpoints(seq: i64, breakpoints: &Vec<Breakpoint>) -> Vec<Request> {
+    let mut seq = seq;
+    let mut breakpoint_map: HashMap<String, Vec<i64>> = HashMap::new();
+    for b in breakpoints.iter() {
+        match breakpoint_map.entry(b.path.clone()) {
+            std::collections::hash_map::Entry::Occupied(mut o) => {
+                o.get_mut().push(b.line);
+            }
+            std::collections::hash_map::Entry::Vacant(v) => {
+                v.insert(vec![b.line]);
+            }
+        }
+    }
+
+    breakpoint_map
+        .iter()
+        .map(|(p, b)| {
+            seq += 1;
+            Request {
+                seq: seq - 1,
+                command: SetBreakpoints(SetBreakpointsArguments {
+                    source: dap::types::Source {
+                        name: Some(p.clone()),
+                        path: Some(p.clone()),
+                        source_reference: None,
+                        presentation_hint: None,
+                        origin: None,
+                        sources: None,
+                        adapter_data: None,
+                        checksums: None,
+                    },
+                    breakpoints: Some(
+                        b.iter()
+                            .map(|v| SourceBreakpoint {
+                                line: *v,
+                                column: None,
+                                condition: None,
+                                hit_condition: None,
+                                log_message: None,
+                            })
+                            .collect(),
+                    ),
+                    lines: None,
+                    source_modified: Some(false),
+                }),
+            }
+        })
+        .collect()
+}
+
+fn gen_continue() -> Request {
+    Request {
         seq: 4,
         command: Continue(ContinueArguments {
             thread_id: 0,
             single_thread: None,
         }),
-    };
+    }
+}
+
+fn run_test(additional_data: Map<String, Value>, breakpoints: &Vec<Breakpoint>) {
+    let mut app = App::init();
+    dap_server::write_server(gen_init(1));
+
+    dap_server::write_server(gen_launch(2, additional_data));
+    for ele in gen_breakpoints(3, &breakpoints) {
+        dap_server::write_server(ele);
+    }
     loop {
         app.app_loop();
         if dap_server::read_server().is_none() {
@@ -97,7 +142,7 @@ fn run_test(additional_data: Map<String, Value>) {
         }
     }
 
-    dap_server::write_server(req);
+    dap_server::write_server(gen_continue());
 
     let start = Instant::now();
 
@@ -130,7 +175,12 @@ fn test_breakpoints_10_lines_and_func() {
             "\\[(?P<file>[^:]+):(?P<line>\\d+)\\] (?P<message>.*)$".to_string(),
         ),
     );
-    run_test(additional_data);
+
+    let breakpoints = vec![Breakpoint {
+        path: "./linux.log".to_string(),
+        line: 10,
+    }];
+    run_test(additional_data, &breakpoints);
 }
 
 fn test_breakpoints_10_lines() {
@@ -148,5 +198,47 @@ fn test_breakpoints_10_lines() {
         "log_pattern".to_string(),
         serde_json::Value::String("\\[([^:]+):(?P<line>\\d+)\\] (?P<message>.*)$".to_string()),
     );
-    run_test(additional_data);
+
+    let breakpoints = vec![Breakpoint {
+        path: "./linux.log".to_string(),
+        line: 10,
+    }];
+    run_test(additional_data, &breakpoints);
+}
+
+fn test_breakpoints_in_source_lines() {
+    println!("\n\nRunning test: 10 lines until breakpoint (in source). Line numbers enabled only");
+    let mut additional_data = serde_json::Map::new();
+    additional_data.insert(
+        "include".to_string(),
+        serde_json::Value::String("./linux/**/*.c".to_string()),
+    );
+    additional_data.insert(
+        "log_file".to_string(),
+        serde_json::Value::String("./linux.log".to_string()),
+    );
+    additional_data.insert(
+        "log_pattern".to_string(),
+        serde_json::Value::String("\\[([^:]+):(?P<line>\\d+)\\] (?P<message>.*)$".to_string()),
+    );
+
+    // Find line 10 in the source
+    let contents = std::fs::read_to_string("./linux.log").unwrap();
+    let line = contents.lines().nth(9).unwrap();
+    let regex = Regex::new(r"\[(?P<file>[^:]+):(?P<line>\d+)\] (?P<message>.*)$").unwrap();
+    let line_number = regex
+        .captures(line)
+        .unwrap()
+        .name("line")
+        .unwrap()
+        .as_str()
+        .parse()
+        .unwrap();
+    let file_name = regex.captures(line).unwrap().name("file").unwrap().as_str();
+
+    let breakpoints = vec![Breakpoint {
+        path: file_name.to_string(),
+        line: line_number,
+    }];
+    run_test(additional_data, &breakpoints);
 }

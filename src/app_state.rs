@@ -235,7 +235,6 @@ impl RunningState {
                         && b.path == self.settings.log_file_name)
             }) {
                 self.stop(StoppedEventReason::Breakpoint);
-                info!("Time {}ms", self.start.elapsed().as_millis());
             }
         }
         let request = match dap_server::read() {

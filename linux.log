@@ -1,0 +1,500 @@
+[linux/crypto/api.c:117] 	larval->alg.cra_destroy = crypto_larval_destroy;
+[linux/crypto/essiv.c:408] 	memcpy(essiv_cipher_name, p, len);
+[linux/block/bio.c:1342] 		iov_iter_advance(iter, bio->bi_iter.bi_size);
+[linux/lib/digsig.c:169] 	if (!m || len != hlen || memcmp(m, h, hlen))
+[linux/mm/page_vma_mapped.c:308] 		goto this_pte;
+[linux/crypto/algif_hash.c:7]  * Copyright (c) 2010 Herbert Xu <herbert@gondor.apana.org.au>
+[linux/ipc/mqueue.c:1540] 	attr->mq_flags = v.mq_flags;
+[linux/block/bio-integrity.c:445] void __init bio_integrity_init(void)
+[linux/mm/shrinker_debug.c:50] 	unsigned long total;
+[linux/crypto/lzo-rle.c:29] static int lzorle_init(struct crypto_tfm *tfm)
+[linux/rust/helpers.c:102] bool rust_helper_IS_ERR(__force const void *ptr)
+[linux/mm/workingset.c:677] 		pages = node_present_pages(sc->nid);
+[linux/fs/d_path.c:334] 	struct prepend_buffer b;
+[linux/io_uring/splice.c:92] 	unsigned int flags = sp->flags & ~SPLICE_F_FD_IN_FIXED;
+[linux/fs/filesystems.c:249] 	read_unlock(&file_systems_lock);
+[linux/lib/buildid.c:79] 		return -EINVAL;
+[linux/fs/userfaultfd.c:770] void mremap_userfaultfd_prep(struct vm_area_struct *vma,
+[linux/lib/clz_ctz.c:27] 	return 32 - fls(val);
+[linux/mm/memcontrol.c:5448] 	page_counter_set_low(&memcg->memory, 0);
+[linux/crypto/hmac.c:84] 	       crypto_shash_export(shash, opad);
+[linux/block/blk-settings.c:663] 		alignment = queue_limit_discard_alignment(b, start);
+[linux/block/blk-pm.c:186]  * accordingly. However, that does not affect the queue runtime PM status
+[linux/lib/dhry_run.c:11] #include <linux/module.h>
+[linux/lib/iomap_copy.c:15]  * Copy data from kernel space to MMIO space, in units of 32 bits at a
+[linux/kernel/ksysfs.c:243] 	&cpu_byteorder_attr.attr,
+[linux/block/blk-map.c:104]  *	@bio: bio being terminated
+[linux/crypto/algif_skcipher.c:358] 	.owner		=	THIS_MODULE
+[linux/lib/cmpdi2.c:9] word_type notrace __cmpdi2(long long a, long long b)
+[linux/io_uring/nop.c:24] 	return IOU_OK;
+[linux/mm/kmemleak.c:986]  * This function is called from the kernel percpu allocator when a new object
+[linux/lib/percpu_test.c:119] 	CHECK(ul, ulong_counter, 2);
+[linux/crypto/ahash.c:544] 	struct hash_alg_common *halg = crypto_hash_alg_common(hash);
+[linux/lib/sg_pool.c:87] 	if (table->orig_nents <= nents_first_chunk)
+[linux/lib/interval_tree.c:38] 	} while (cur && (state->nodes[0]->last >= cur->start ||
+[linux/lib/logic_pio.c:247] 					addr, sizeof(type));		\
+[linux/crypto/xcbc.c:210] 		goto err_free_inst;
+[linux/lib/kobject.c:601] 	kobj_kset_leave(kobj);
+[linux/lib/interval_tree_test.c:138] MODULE_AUTHOR("Michel Lespinasse");
+[linux/lib/test_fpu.c:36] 	/* Sets precision flag */
+[linux/block/blk-mq-tag.c:561] free_bitmap_tags:
+[linux/crypto/sha256_generic.c:76] 	.digestsize	=	SHA224_DIGEST_SIZE,
+[linux/kernel/sys_ni.c:287] COND_SYSCALL(spu_create);
+[linux/mm/ioremap.c:7]  * (C) Copyright 1995 1996 Linus Torvalds
+[linux/lib/kfifo.c:93] 	unsigned int esize = fifo->esize;
+[linux/lib/overflow_kunit.c:1094] 	TEST_CASTABLE_TO_TYPE(small, s ## width, false);			\
+[linux/fs/stack.c:41] 	 * If CONFIG_SMP or CONFIG_PREEMPTION on 32-bit, it's vital for
+[linux/block/blk-cgroup.c:1715] 	mutex_unlock(&blkcg_pol_register_mutex);
+[linux/kernel/kexec_elf.c:426] 	*lowest_load_addr = lowest_addr;
+[linux/lib/dhry_1.c:207] 				Int_2_Loc = Run_Index;
+[linux/fs/readdir.c:376] 		lastdirent = (void __user *) buf.current_dir - buf.prev_reclen;
+[linux/lib/error-inject.c:149] 	.notifier_call = ei_module_callback,
+[linux/usr/gen_init_cpio.c:679] 		if (NULL == file_handler_table[type_idx].type) {
+[linux/lib/ref_tracker.c:241] 					GFP_NOWAIT | __GFP_NOWARN);
+[linux/kernel/cfi.c:94] bool is_cfi_trap(unsigned long addr)
+[linux/lib/strcat_kunit.c:102] kunit_test_suite(strcat_test_suite);
+[linux/kernel/watch_queue.c:689] 	wqueue = kzalloc(sizeof(*wqueue), GFP_KERNEL);
+[linux/lib/stackinit_kunit.c:55] #define DO_NOTHING_CALL_SCALAR(var, name)			\
+[linux/fs/attr.c:64]  * Return: A mask of ATTR_KILL_S{G,U}ID indicating which - if any - setid bits
+[linux/lib/cpu_rmap.c:310] int irq_cpu_rmap_add(struct cpu_rmap *rmap, int irq)
+[linux/kernel/fork.c:2774] bad_fork_cleanup_semundo:
+[linux/crypto/xcbc.c:28] struct xcbc_tfm_ctx {
+[linux/fs/char_dev.c:107] 		return ERR_PTR(-EINVAL);
+[linux/crypto/sm2.c:169] 		goto err_freex;
+[linux/mm/percpu-vm.c:277] 			       int page_start, int page_end, gfp_t gfp)
+[linux/kernel/groups.c:204] 		return -EPERM;
+[linux/io_uring/openclose.c:222] 	struct file *file;
+[linux/io_uring/epoll.c:8] #include <linux/eventpoll.h>
+[linux/lib/test_xarray.c:1162] 			     index += (1UL << order)) {
+[linux/mm/hugetlb_vmemmap.c:187] 			       struct vmemmap_remap_walk *walk)
+[linux/net/compat.c:184] 		struct compat_cmsghdr cmsg;
+[linux/lib/test_xarray.c:199] 	xa_set_mark(xa, index, XA_MARK_0);
+[linux/lib/irq_poll.c:51] static void __irq_poll_complete(struct irq_poll *iop)
+[linux/block/blk-rq-qos.c:324] 	if (rqos->ops->debugfs_attrs) {
+[linux/kernel/torture.c:241] 		if (*min_offl > delta)
+[linux/kernel/tracepoint.c:94]  * state is reached.
+[linux/lib/decompress_unxz.c:279] 	if (flush == NULL) {
+[linux/block/blk-cgroup-fc-appid.c:7]  * @app_id: application identifier
+[linux/mm/page_owner.c:262] 	 * after migration. Until then, the info can be useful in case of
+[linux/lib/test_static_key_base.c:12] #include <linux/jump_label.h>
+[linux/crypto/algapi.c:771] 		if (!crypto_mod_get(alg)) {
+[linux/crypto/cast6_generic.c:218] 	block[2] = get_unaligned_be32(inbuf + 8);
+[linux/kernel/params.c:308] int param_set_bool(const char *val, const struct kernel_param *kp)
+[linux/lib/pm-notifier-error-inject.c:9] module_param(priority, int, 0);
+[linux/lib/test_ref_tracker.c:48] 			   struct ref_tracker **trackerp)
+[linux/io_uring/statx.c:43] 	if (IS_ERR(sx->filename)) {
+[linux/fs/mbcache.c:212] 	return __entry_find(cache, entry, entry->e_key);
+[linux/ipc/ipc_sysctl.c:35] static int proc_ipc_auto_msgmni(struct ctl_table *table, int write,
+[linux/crypto/fips.c:54] 		.data		= &fips_name,
+[linux/block/t10-pi.c:9] #include <linux/crc-t10dif.h>
+[linux/crypto/aria_generic.c:223] 		aria_add_round_key(key[rkidx], &reg0, &reg1, &reg2, &reg3);
+[linux/lib/dynamic_queue_limits.c:96] 			dql->lowest_slack = UINT_MAX;
+[linux/fs/remap_range.c:188] 					 loff_t len, bool *is_same)
+[linux/lib/smp_processor_id.c:25] #ifdef CONFIG_SMP
+[linux/crypto/rng.c:202] 	struct crypto_istat_rng *istat = rng_get_stat(alg);
+[linux/kernel/exit.c:681]  * This does two things:
+[linux/fs/binfmt_elf_fdpic.c:438] 					 &interp_params);
+[linux/crypto/gcm.c:592] 		return -ENOMEM;
+[linux/crypto/cast6_generic.c:24] #define s3 cast_s3
+[linux/mm/fail_page_alloc.c:33] 		return false;
+[linux/mm/page_table_check.c:27] 	return kstrtobool(buf, &__page_table_check_enabled);
+[linux/lib/test_debug_virtual.c:3] #include <linux/module.h>
+[linux/crypto/streebog_generic.c:712] 	0xda4bd1b1417888d6ULL, 0xb09d1332ee6eb219ULL, 0x2f3ed975668794b4ULL,
+[linux/block/blk-integrity.c:366] 	bi->flags = BLK_INTEGRITY_VERIFY | BLK_INTEGRITY_GENERATE |
+[linux/crypto/akcipher.c:147] 	return -ENOSYS;
+[linux/kernel/resource_kunit.c:79] 		.r1 = &r3, .r2 = &r4, .r.start = R3_START, .r.end = R4_END, .ret = true,
+[linux/lib/test_maple_tree.c:1750] 	int i, nr_entries = 125;
+[linux/lib/ref_tracker.c:192] 	gfp_t gfp_mask = gfp | __GFP_NOWARN;
+[linux/kernel/kexec_elf.c:71] 		return false;
+[linux/mm/slab.c:507]  * the CPUs getting into lockstep and contending for the global cache chain
+[linux/mm/page_idle.c:52] static bool page_idle_clear_pte_refs_one(struct folio *folio,
+[linux/mm/secretmem.c:201] 		return ERR_CAST(inode);
+[linux/kernel/watch_queue.c:607] 	wqueue->pipe = NULL;
+[linux/block/bdev.c:622] 		mutex_lock(&bdev->bd_holder_lock);
+[linux/lib/decompress_inflate.c:187] gunzip_nomem4:
+[linux/lib/uuid.c:77]  * uuid_is_valid - checks if a UUID string is valid
+[linux/lib/irq_poll.c:201] 	local_irq_enable();
+[linux/scripts/sorttable.c:51] #ifndef EM_MICROBLAZE
+[linux/io_uring/openclose.c:5] #include <linux/file.h>
+[linux/kernel/torture.c:808]  * the usual module_init() mechanism, but rather by an explicit call from
+[linux/lib/list-test.c:905] 	hlist_add_head(&a, &list);
+[linux/block/blk-ioc.c:112] static void ioc_release_fn(struct work_struct *work)
+[linux/crypto/cast5_generic.c:133] 	0x1f8fb214, 0xd372cf08, 0xcc3c4a13,
+[linux/init/calibrate.c:195] 	/* wait for "start of" clock tick */
+[linux/lib/kobject.c:357] 					   const char *fmt, va_list vargs)
+[linux/kernel/tracepoint.c:154] 			early_probes = &tp_probes->rcu;
+[linux/lib/bitrev.c:27] 	0x1e, 0x9e, 0x5e, 0xde, 0x3e, 0xbe, 0x7e, 0xfe,
+[linux/lib/iommu-helper.c:20] 	if (index < size) {
+[linux/lib/test_parman.c:181] 	for (i = 0; i < TEST_PARMAN_PRIO_COUNT; i++) {
+[linux/lib/test_objagg.c:115] 	return delta;
+[linux/lib/hexdump.c:58]  * @src: ascii hexadecimal string
+[linux/lib/ubsan.c:120] static bool type_is_int(struct type_descriptor *type)
+[linux/fs/bad_inode.c:27] 	.open		= bad_file_open,
+[linux/block/blk-ioc.c:233] 	ioc = kmem_cache_alloc_node(iocontext_cachep, gfp_flags | __GFP_ZERO,
+[linux/lib/bitmap.c:302] 		dst[k] = (old[k] & ~mask[k]) | (new[k] & mask[k]);
+[linux/kernel/crash_core.c:454] 	VMCOREINFO_OFFSET(page, mapping);
+[linux/lib/syscall.c:83] 	    unlikely(collect_syscall(target, info)) ||
+[linux/lib/pci_iomap.c:144]  * it has _not_ defined it's own private pci_iounmap function, we define
+[linux/crypto/rmd160.c:258] 	struct rmd160_ctx *rctx = shash_desc_ctx(desc);
+[linux/io_uring/epoll.c:52] 	ret = do_epoll_ctl(ie->epfd, ie->op, ie->fd, &ie->event, force_nonblock);
+[linux/lib/memweight.c:9]  * @bytes: the size of the area
+[linux/mm/page_poison.c:25] 	void *addr = kmap_atomic(page);
+[linux/lib/bsearch.c:14]  * bsearch - binary search an array of elements
+[linux/lib/hweight.c:22] 	res = (res & 0x33333333) + ((res >> 2) & 0x33333333);
+[linux/io_uring/timeout.c:514] 		      IORING_TIMEOUT_MULTISHOT))
+[linux/kernel/crash_core.c:7] #include <linux/buildid.h>
+[linux/mm/page_alloc.c:5554] 			memset(direct_map_addr, poison, PAGE_SIZE);
+[linux/crypto/cast6_generic.c:229] 	Km = c->Km[3]; Kr = c->Kr[3]; QBAR(block, Kr, Km);
+[linux/mm/maccess.c:67] 		copy_to_kernel_nofault_loop(dst, src, size, u64, Efault);
+[linux/fs/binfmt_elf_fdpic.c:578] 		interp_params->map_addr = sp;
+[linux/lib/cpu_rmap.c:21]  * alloc_cpu_rmap - allocate CPU affinity reverse-map
+[linux/crypto/cryptd.c:237] 	return crypto_skcipher_setkey(child, key, keylen);
+[linux/ipc/compat.c:53] 	struct compat_ipc_perm v;
+[linux/kernel/torture.c:128]  * implied one-jiffy random fuzz.  This is intended to replace calls to
+[linux/crypto/crypto_engine.c:110] 			dev_err(engine->dev, "failed to unprepare crypt hardware\n");
+[linux/mm/memremap.c:343] 		params.pgprot = pgprot_noncached(params.pgprot);
+[linux/mm/rodata_test.c:41] 	/* test 4: check if the rodata section is PAGE_SIZE aligned */
+[linux/lib/list_sort.c:226] 			/* Install the merged result in place of the inputs */
+[linux/crypto/lzo.c:8] #include <linux/crypto.h>
+[linux/block/disk-events.c:75] 	struct disk_events *ev = disk->ev;
+[linux/lib/error-inject.c:126] 		if (ent->priv == mod) {
+[linux/io_uring/uring_cmd.c:149] 	if (ret != -EIOCBQUEUED) {
+[linux/fs/fs_struct.c:50] static inline int replace_path(struct path *p, const struct path *old, const struct path *new)
+[linux/kernel/kallsyms_selftest.c:191] static bool match_cleanup_name(const char *s, const char *name)
+[linux/block/blk-mq-debugfs-zoned.c:3]  * Copyright (C) 2017 Western Digital Corporation or its affiliates.
+[linux/lib/cpumask_kunit.c:149] 	.name = "cpumask",
+[linux/mm/memfd.c:202] 	file_seals = memfd_file_seals_ptr(file);
+[linux/lib/list-test.c:252] 		KUNIT_EXPECT_PTR_EQ(test, ptr, list2_values[i]);
+[linux/lib/bcd.c:2] #include <linux/bcd.h>
+[linux/crypto/compress.c:10] #include "internal.h"
+[linux/block/bdev.c:908] 	 * from userland - e.g. eject(1).
+[linux/crypto/anubis.c:93] 	0x499239abU, 0x2c58b0e8U, 0xf9efc32cU, 0xe6d1bf6eU,
+[linux/crypto/cmac.c:45] struct cmac_desc_ctx {
+[linux/mm/debug_page_ref.c:34] EXPORT_TRACEPOINT_SYMBOL(page_ref_mod_and_return);
+[linux/mm/z3fold.c:212] static inline struct z3fold_pool *slots_to_pool(struct z3fold_buddy_slots *s)
+[linux/fs/super.c:1764] 	if (sb->s_op->unfreeze_fs) {
+[linux/block/blk-mq-debugfs-zoned.c:6] #include <linux/blkdev.h>
+[linux/kernel/range.c:49] 		/* new start/end, will add it back at last */
+[linux/lib/nmi_backtrace.c:82] 	 * and therefore could not run their irq_work.
+[linux/lib/string.c:640] void *memmove(void *dest, const void *src, size_t count)
+[linux/lib/lockref.c:158]  * @lockref: pointer to lockref structure
+[linux/crypto/ahash.c:351] 	struct ahash_request *areq = data;
+[linux/io_uring/io-wq.c:1306] 	struct io_wq_acct *acct;
+[linux/crypto/skcipher.c:394] 		walk->nbytes = min_t(unsigned, n,
+[linux/crypto/ofb.c:46] 		crypto_xor_cpy(walk.dst.virt.addr, walk.src.virt.addr, walk.iv,
+[linux/mm/show_mem.c:38] 	unsigned long reclaimable;
+[linux/crypto/twofish_common.c:40]  * Marc Mutz <Marc@Mutz.com>
+[linux/crypto/chacha20poly1305.c:65] 		struct poly_req poly;
+[linux/lib/ts_bm.c:131] 	bm->good_shift[0] = 1;
+[linux/mm/percpu-vm.c:255] static void pcpu_post_map_flush(struct pcpu_chunk *chunk,
+[linux/lib/logic_pio.c:218] 		if (in_range(addr, range->hw_start, range->size)) {
+[linux/io_uring/fdinfo.c:199] 		seq_printf(m, "  user_data=%llu, res=%d, flags=%x\n",
+[linux/lib/crc32.c:279] 	return crc32_generic_shift(crc, len, CRC32C_POLY_LE);
+[linux/lib/debugobjects.c:1285] 	debug_object_activate(&obj, &descr_type_test);
+[linux/crypto/api.c:20] #include <linux/sched/signal.h>
+[linux/mm/dmapool.c:111] 		print_hex_dump(KERN_ERR, "", DUMP_PREFIX_OFFSET, 16, 1,
+[linux/crypto/crct10dif_common.c:72] 	unsigned int i;
+[linux/mm/page_reporting.c:293] 	leftover = PAGE_REPORTING_CAPACITY - offset;
+[linux/lib/bitrev.c:15] 	0x18, 0x98, 0x58, 0xd8, 0x38, 0xb8, 0x78, 0xf8,
+[linux/block/blk-crypto-fallback.c:383] 	struct skcipher_request *ciph_req = NULL;
+[linux/io_uring/sync.c:66] 	req->flags |= REQ_F_FORCE_ASYNC;
+[linux/kernel/auditsc.c:2629] 	security_ipc_getsecid(ipcp, &context->ipc.osid);
+[linux/fs/binfmt_misc.c:19] #include <linux/slab.h>
+[linux/lib/is_single_threaded.c:4]  * Copyright (C) 2008 Red Hat, Inc. All Rights Reserved.
+[linux/lib/radix-tree.c:831] 	rcu_assign_pointer(*slot, item);
+[linux/kernel/latencytop.c:63] static struct latency_record latency_record[MAXLR];
+[linux/lib/crc32test.c:552] 	u32 crc;	/* random starting crc */
+[linux/crypto/xor.c:24] static struct xor_block_template *active_template;
+[linux/crypto/kdf_sp800108.c:144] 		pr_info("alg: self-tests for CTR-KDF (hmac(sha256)) passed\n");
+[linux/ipc/util.c:835]  * File positions: pos 0 -> header, pos n -> ipc idx = n - 1.
+[linux/lib/test_lockup.c:27] static unsigned int cooldown_secs;
+[linux/lib/atomic64_test.c:240] 	BUG_ON(v.counter != r);
+[linux/block/blk-mq-sched.c:334] 		if (__blk_mq_sched_dispatch_requests(hctx) == -EAGAIN)
+[linux/kernel/smpboot.c:164] 			ht->thread_fn(td->cpu);
+[linux/kernel/user-return-notifier.c:35] void fire_user_return_notifiers(void)
+[linux/scripts/unifdef.c:1168] 	if (definethis) {
+[linux/crypto/fcrypt.c:4]  * Written by David Howells (dhowells@redhat.com)
+[linux/kernel/hung_task.c:375] 		t = hung_timeout_jiffies(hung_last_checked, interval);
+[linux/mm/page_vma_mapped.c:5] #include <linux/swap.h>
+[linux/lib/random32.c:49]  *	This is used for pseudo-randomness with no outside seeding.
+[linux/lib/crc-itu-t.c:7] #include <linux/module.h>
+[linux/mm/zswap.c:658] 		goto put_unlock;
+[linux/kernel/groups.c:131]  * Validate a group subscription and, if valid, impose it upon current's task
+[linux/kernel/auditsc.c:2737] int audit_signal_info_syscall(struct task_struct *t)
+[linux/mm/ioremap.c:51] void iounmap(volatile void __iomem *addr)
+[linux/lib/crc32test.c:91] 	0x48, 0xfe, 0x15, 0xa0, 0x91, 0xfd, 0x7e, 0x6c,
+[linux/lib/kasprintf.c:48] 		return kstrdup_const(va_arg(ap, const char*), gfp);
+[linux/lib/bitrev.c:45] EXPORT_SYMBOL_GPL(byte_rev_table);
+[linux/fs/filesystems.c:224] 			pr_warn("%s: truncating file system list\n", __func__);
+[linux/mm/ksm.c:3366] static ssize_t stable_node_dups_show(struct kobject *kobj,
+[linux/crypto/cast6_generic.c:27] #define F1(D, r, m)  ((I = ((m) + (D))), (I = rol32(I, (r))),   \
+[linux/fs/fs_parser.c:66] 		if (likely(is_flag(p) == want_flag))
+[linux/mm/sparse.c:404] static struct mem_section_usage * __init
+[linux/block/genhd.c:532] out_unregister_bdi:
+[linux/mm/readahead.c:722] 	if (folio_test_writeback(folio))
+[linux/lib/trace_readwrite.c:32] void log_read_mmio(u8 width, const volatile void __iomem *addr,
+[linux/init/version.c:45]  * which are really fixed at the very last step of build process.
+[linux/kernel/kexec_core.c:882] 		if (image->file_mode)
+[linux/crypto/hash_info.c:16] 	[HASH_ALGO_SHA256]	= "sha256",
+[linux/mm/debug_page_alloc.c:42] 	INIT_LIST_HEAD(&page->buddy_list);
+[linux/lib/cpumask.c:148] 	cpu = (node == NUMA_NO_NODE) ?
+[linux/mm/debug_vm_pgtable.c:16] #include <linux/kernel.h>
+[linux/crypto/crct10dif_common.c:79] EXPORT_SYMBOL(crc_t10dif_generic);
+[linux/kernel/watchdog.c:883] 		.procname	= "softlockup_panic",
+[linux/fs/inode.c:877] 	spin_unlock(&inode->i_lock);
+[linux/fs/remap_range.c:21] #include <linux/uaccess.h>
+[linux/crypto/cast6_generic.c:97] 	key[5] ^= F2(key[6], Tr[i % 4][1], Tm[i][1]);
+[linux/lib/netdev-notifier-error-inject.c:45] static void netdev_err_inject_exit(void)
+[linux/lib/uuid.c:88] bool uuid_is_valid(const char *uuid)
+[linux/kernel/kexec.c:242] 		((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH_DEFAULT))
+[linux/lib/test_kprobes.c:38] 	KUNIT_EXPECT_FALSE(current_test, preemptible());
+[linux/lib/ts_fsm.c:30] #include <linux/textsearch_fsm.h>
+[linux/lib/xxhash.c:259] 	struct xxh64_state state;
+[linux/mm/ioremap.c:4]  * This is needed for high PCI addresses that aren't mapped in the
+[linux/block/blk-crypto-profile.c:516] 		if (reference->modes_supported[i] & ~target->modes_supported[i])
+[linux/crypto/aes_ti.c:17] 	return aes_expandkey(ctx, in_key, key_len);
+[linux/lib/ubsan.c:259] 	ubsan_epilogue();
+[linux/mm/debug_page_ref.c:47] EXPORT_SYMBOL(__page_ref_freeze);
+[linux/mm/slab_common.c:1102] 	flags &= ~GFP_SLAB_BUG_MASK;
+[linux/lib/stackdepot.c:383] 	bucket = &stack_table[hash & stack_hash_mask];
+[linux/crypto/dh.c:352] 	unsigned int n, oversampling_size;
+[linux/block/blk-settings.c:54] 	lim->logical_block_size = lim->physical_block_size = lim->io_min = 512;
+[linux/kernel/usermode_driver.c:8] #include <linux/fs_struct.h>
+[linux/mm/mmap.c:404] 	flush_dcache_mmap_unlock(mapping);
+[linux/crypto/ofb.c:70] 	 * give a partial block at the very end, never earlier.
+[linux/crypto/xxhash_generic.c:42] 			 unsigned int length)
+[linux/lib/debug_info.c:5]  * CONFIG_DEBUG_INFO_REDUCED. Please do not add actual code. However,
+[linux/kernel/relay.c:824]  *	@filp: the file
+[linux/crypto/sm4.c:112]  * @ctx:	The location where the computed key will be stored.
+[linux/crypto/serpent_generic.c:424] 	keyiter(k[4], r2, r1, r4, 112, 12);
+[linux/lib/notifier-error-inject.c:71] 		 * Create debugfs r/w file containing action->error. If
+[linux/init/version-timestamp.c:21] 	.ns.inum = PROC_UTS_INIT_INO,
+[linux/mm/memcontrol.c:6200] 	ptl = pmd_trans_huge_lock(pmd, vma);
+[linux/crypto/camellia_generic.c:618] 	subL[6] = kll; subR[6] = klr;
+[linux/mm/dmapool.c:109] 		 * POOL_POISON_FREED
+[linux/fs/fs_types.c:75]  * * FT_SYMLINK		- Symbolic link
+[linux/lib/iov_iter.c:418]  * @i: source iterator
+[linux/kernel/irq_work.c:192] 		if (llist_empty(lazy))
+[linux/ipc/compat.c:11]  * Copyright (C) 2000           David Mosberger-Tang <davidm@hpl.hp.com>
+[linux/block/blk-mq-sched.c:392] 						    q->nr_requests);
+[linux/init/do_mounts.c:238] 	if (nfs_root_data(&root_dev, &root_data))
+[linux/crypto/curve25519-generic.c:82] 	crypto_unregister_kpp(&curve25519_alg);
+[linux/block/blk-cgroup-fc-appid.c:37] 	strscpy(blkcg->fc_app_id, app_id, app_id_len);
+[linux/mm/madvise.c:991] 	offset = (loff_t)(start - vma->vm_start)
+[linux/kernel/configs.c:24] "	.pushsection .rodata, \"a\"		\n"
+[linux/lib/notifier-error-inject.c:32] 		container_of(nb, struct notifier_err_inject, nb);
+[linux/crypto/serpent_generic.c:309] 	keyiter(k[4], r4, r3, r1, 4, 4);
+[linux/fs/stat.c:805] 	if (inode->i_bytes < bytes) {
+[linux/io_uring/rw.c:91] 		if (unlikely(req->buf_index >= ctx->nr_user_bufs))
+[linux/crypto/jitterentropy-kcapi.c:170] 				      sizeof(jent_block));
+[linux/kernel/tracepoint.c:595] 	ret = blocking_notifier_chain_register(&tracepoint_notify_list, nb);
+[linux/fs/pnode.c:416] 	 * quickly check if the current mount can be unmounted.
+[linux/lib/test_parman.c:144] 	unsigned long priority;
+[linux/mm/mmap.c:3658] 	struct anon_vma_chain *avc;
+[linux/init/initramfs.c:20] #include <linux/umh.h>
+[linux/mm/page_counter.c:174] 		unsigned long old;
+[linux/block/blk-stat.c:122] 		kfree(cb->stat);
+[linux/net/devres.c:7] #include <linux/etherdevice.h>
+[linux/security/device_cgroup.c:264] 	if (type == DEVCG_DEV_ALL)
+[linux/lib/crc-ccitt.c:33] 	0x8408, 0x9581, 0xa71a, 0xb693, 0xc22c, 0xd3a5, 0xe13e, 0xf0b7,
+[linux/mm/gup.c:2707] 	if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
+[linux/mm/pgtable-generic.c:60]  * permission. Furthermore, we know it always gets set to a "more
+[linux/fs/nsfs.c:197] 	switch (ioctl) {
+[linux/lib/seq_buf.c:148] 	unsigned int len = seq_buf_buffer_left(s);
+[linux/lib/cmdline.c:147]  *	potentially suffixed with K, M, G, T, P, E.
+[linux/fs/fcntl.c:417] 	case F_GET_RW_HINT:
+[linux/crypto/authenc.c:263] static void authenc_verify_ahash_done(void *data, int err)
+[linux/crypto/crc32c_generic.c:60] 	struct chksum_desc_ctx *ctx = shash_desc_ctx(desc);
+[linux/io_uring/statx.c:71] 	if (sx->filename)
+[linux/crypto/sha3_generic.c:29] #define SHA3_INLINE	noinline
+[linux/mm/memfd.c:307] 			flags |= MFD_EXEC;
+[linux/block/blk-stat.c:93] 		for (bucket = 0; bucket < cb->buckets; bucket++) {
+[linux/mm/vmalloc.c:775] static __always_inline unsigned long
+[linux/lib/siphash_kunit.c:119] 	u8 in_unaligned[65] __aligned(SIPHASH_ALIGNMENT);
+[linux/io_uring/sync.c:27] 	struct io_sync *sync = io_kiocb_to_cmd(req, struct io_sync);
+[linux/security/inode.c:255]  * the error value (via ERR_PTR).
+[linux/lib/ratelimit.c:45] 	 * the entity that is holding the lock already:
+[linux/fs/char_dev.c:12] #include <linux/string.h>
+[linux/security/inode.c:136] 		error = -EEXIST;
+[linux/kernel/audit_watch.c:128] int audit_watch_compare(struct audit_watch *watch, unsigned long ino, dev_t dev)
+[linux/kernel/context_tracking.c:580]  *			   static key from low level code.
+[linux/kernel/iomem.c:164] 	WARN_ON(devres_release(dev, devm_memremap_release,
+[linux/kernel/user-return-notifier.c:39] 	struct hlist_head *head;
+[linux/lib/list_sort.c:13]  * sentinel head node, "prev" links not maintained.
+[linux/lib/fortify_kunit.c:224] #define TEST_kvmalloc(checker, expected_pages, alloc_pages)	do {	\
+[linux/lib/globtest.c:140] 	 * end of the tests.  Then come two null-terminated strings: the
+[linux/lib/sg_pool.c:100]  * @table:	The sg table header to use
+[linux/kernel/compat.c:85] 	struct compat_rusage r32;
+[linux/crypto/rsa.c:242] 	rsa_free_mpi_key(mpi_key);
+[linux/crypto/camellia_generic.c:795] 	u32 krll, krlr, krrl, krrr;
+[linux/net/sysctl_net.c:65] 	if (uid_valid(ns_root_uid))
+[linux/io_uring/rsrc.c:1131] 	/* store original address for later verification */
+[linux/ipc/mq_sysctl.c:123] void retire_mq_sysctls(struct ipc_namespace *ns)
+[linux/mm/secretmem.c:57] 	struct page *page;
+[linux/block/t10-pi.c:219] 	return t10_pi_generate(iter, t10_pi_crc_fn, T10_PI_TYPE3_PROTECTION);
+[linux/kernel/scftorture.c:12] #include <linux/bitops.h>
+[linux/block/blk-integrity.c:11] #include <linux/mempool.h>
+[linux/lib/test-string_helpers.c:335] 		.flags = ESCAPE_SPACE | ESCAPE_OCTAL | ESCAPE_NAP,
+[linux/crypto/chacha20poly1305.c:447] 	 * - poly_copy_tag()
+[linux/init/init_task.c:4] #include <linux/mqueue.h>
+[linux/mm/memory-failure.c:1603] 	if (PageHuge(hpage) && !PageAnon(hpage)) {
+[linux/lib/once.c:3] #include <linux/spinlock.h>
+[linux/block/blk-rq-qos.c:29] 		if (rqos->ops->cleanup)
+[linux/mm/page_table_check.c:27] 	return kstrtobool(buf, &__page_table_check_enabled);
+[linux/block/disk-events.c:136] 		__disk_unblock_events(disk, false);
+[linux/lib/textsearch.c:119] 		if (!strcmp(name, o->name)) {
+[linux/mm/mprotect.c:33] #include <linux/userfaultfd_k.h>
+[linux/scripts/sorttable.c:341] 	case ELFCLASS64:
+[linux/crypto/anubis.c:433] 	0xb4759fc9U, 0xb57799c1U, 0xb67193d9U, 0xb77395d1U,
+[linux/lib/crc64-rocksoft.c:49] 		static_branch_disable(&crc64_rocksoft_fallback);
+[linux/block/holder.c:116] out_free_holder:
+[linux/kernel/ucount.c:361] 	static struct ctl_table empty[1];
+[linux/block/blk-lib.c:79] 		cond_resched();
+[linux/fs/binfmt_elf.c:181] 	int argc = bprm->argc;
+[linux/crypto/hash_info.c:41] 	[HASH_ALGO_SHA384]	= SHA384_DIGEST_SIZE,
+[linux/block/disk-events.c:60]  * @disk: disk to block events for
+[linux/ipc/shm.c:338] 		shmem_lock(shm_file, 0, shp->mlock_ucounts);
+[linux/crypto/anubis.c:359] 	0x83838383U, 0x1b1b1b1bU, 0x0e0e0e0eU, 0x23232323U,
+[linux/io_uring/epoll.c:12] #include "io_uring.h"
+[linux/kernel/profile.c:242] 			} else if (!hits[i + j].hits) {
+[linux/block/sed-opal.c:223] 	struct list_head node;
+[linux/block/elevator.c:262] 		rq = rb_entry(n, struct request, rb_node);
+[linux/mm/kmemleak.c:43]  *   modifications to the memory scanning parameters including the scan_thread
+[linux/mm/page_poison.c:8] #include <linux/poison.h>
+[linux/lib/fault-inject.c:416] #ifdef CONFIG_FAULT_INJECTION_STACKTRACE_FILTER
+[linux/block/blk-lib.c:28] 	if (granularity_aligned_sector != sector)
+[linux/mm/memory-tiers.c:418] 	 * Once we detect such a memory tier, we consider that tier
+[linux/lib/klist.c:50] 		((unsigned long)knode->n_klist & KNODE_KLIST_MASK);
+[linux/rust/helpers.c:10]  * defined. Other helpers, called from non-inline functions, may not be
+[linux/lib/crc64-rocksoft.c:121] module_param_call(transform, NULL, crc64_rocksoft_transform_show, NULL, 0444);
+[linux/crypto/geniv.c:77] 	if (snprintf(inst->alg.base.cra_name, CRYPTO_MAX_ALG_NAME,
+[linux/init/noinitramfs.c:5]  * Copyright (C) 2006, NXP Semiconductors, All Rights Reserved
+[linux/mm/mmzone.c:15] 	return NODE_DATA(first_online_node);
+[linux/mm/interval_tree.c:108] 	WARN_ON_ONCE(node->cached_vma_start != avc_start_pgoff(node));
+[linux/fs/remap_range.c:508] 	if (same->reserved1 || same->reserved2)
+[linux/lib/crc7.c:42] 	0x4a, 0x58, 0x6e, 0x7c, 0x02, 0x10, 0x26, 0x34,
+[linux/crypto/hash_info.c:44] 	[HASH_ALGO_RIPE_MD_128]	= RMD128_DIGEST_SIZE,
+[linux/mm/hugetlb_vmemmap.c:278] 	BUILD_BUG_ON(NR_RESET_STRUCT_PAGE * 2 > PAGE_SIZE / sizeof(struct page));
+[linux/crypto/simd.c:482] 	const char *drvname;
+[linux/crypto/kpp.c:95] 	.free = crypto_kpp_free_instance,
+[linux/lib/memory-notifier-error-inject.c:4] #include <linux/memory.h>
+[linux/kernel/tracepoint.c:539]  * @data: tracepoint data
+[linux/fs/timerfd.c:346] #define timerfd_show NULL
+[linux/kernel/tsacct.c:140] 	 * Divide by 1024 to avoid overflow, and to avoid division.
+[linux/block/blk-crypto-profile.c:16]  * If the device has keyslots, then its blk_crypto_profile also handles managing
+[linux/block/bio.c:440] 	if (!cache->free_list) {
+[linux/io_uring/cancel.c:286] 		ret = __io_sync_cancel(current->io_uring, &cd, sc.fd);
+[linux/mm/mmap.c:632]  * @pgoff: The page offset of vma
+[linux/block/blk-ioc.c:389] 	if (likely(!radix_tree_insert(&ioc->icq_tree, q->id, icq))) {
+[linux/mm/migrate.c:1514] 	int nr_retry_pages = 0;
+[linux/kernel/ucount.c:312] 	/* Caller must hold a reference to ucounts */
+[linux/fs/file_table.c:476] 	filp_cachep = kmem_cache_create("filp", sizeof(struct file), 0,
+[linux/fs/remap_range.c:229] 		src_addr = kmap_local_folio(src_folio,
+[linux/kernel/static_call.c:2] #include <linux/static_call.h>
+[linux/kernel/kcov.c:180] 	 * interrupts, there are paired barrier()/WRITE_ONCE() in
+[linux/crypto/cipher.c:7]  * Copyright (c) 2002 James Morris <jmorris@intercode.com.au>
+[linux/kernel/utsname_sysctl.c:91] 		.proc_handler	= proc_do_uts_string,
+[linux/lib/trace_readwrite.c:3]  * Register read and write tracepoints
+[linux/fs/binfmt_elf_fdpic.c:650] 	NEW_AUX_ENT(AT_PHENT,	sizeof(struct elf_phdr));
+[linux/kernel/signal.c:894] 	ptrace_signal_wake_up(t, t->jobctl & JOBCTL_LISTENING);
+[linux/block/bio-integrity.c:229] 	/* Allocate kernel buffer for protection data */
+[linux/lib/oid_registry.c:114] 	*oid = look_up_OID(data + 2, datasize - 2);
+[linux/crypto/lz4.c:56] 	int out_len = LZ4_compress_default(src, dst,
+[linux/crypto/tcrypt.c:2194] 				  speed_template_16_24_32);
+[linux/lib/polynomial.c:35]  * formulae to accept millidegrees of Celsius. Here what they look like after
+[linux/lib/nmi_backtrace.c:76] 		touch_softlockup_watchdog();
+[linux/crypto/blake2b_generic.c:46] #define G(r,i,a,b,c,d)                                  \
+[linux/fs/xattr.c:439] 	error = security_inode_getxattr(dentry, name);
+[linux/crypto/aes_ti.c:13] 			 unsigned int key_len)
+[linux/crypto/cmac.c:289] 		+ ((alignmask | (__alignof__(__be64) - 1)) &
+[linux/lib/gen_crc64table.c:93] 	print_crc64_tables();
+[linux/scripts/unifdef.c:402]  * always be kept and the rest of the sequence after the next #elif or
+[linux/scripts/sorttable.c:68] static uint16_t (*r2)(const uint16_t *);
+[linux/kernel/nsproxy.c:426] 	 * Install requested namespaces. The caller will have
+[linux/lib/test_lockup.c:201] 	if (test_disable_irq)
+[linux/lib/strscpy_kunit.c:95] 	/* tc(test, src, count, expected, chars, terminator, pad) */
+[linux/lib/test_bitmap.c:760] 			bitmap_set(copy, bit, 1);
+[linux/scripts/insert-sys-cert.c:228] static char *read_file(char *file_name, int *size)
+[linux/lib/interval_tree.c:93] 			iter->last_used = iter->last_index;
+[linux/crypto/jitterentropy.c:41]  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+[linux/lib/plist.c:52] 		plist_check_prev_next(top, prev, next);
+[linux/lib/stackinit_kunit.c:155] 	/* Notice when a new test is larger than expected. */	\
+[linux/kernel/watch_queue.c:393] 	for (i = 0; i < wqueue->nr_pages; i++)
+[linux/crypto/aes_ti.c:36] static void aesti_decrypt(struct crypto_tfm *tfm, u8 *out, const u8 *in)
+[linux/kernel/scftorture.c:545] 	unsigned long weight_many_wait1 = weight_many_wait;
+[linux/io_uring/splice.c:19] 	loff_t				off_out;
+[linux/mm/khugepaged.c:1976] 				page = folio_file_page(folio, index);
+[linux/crypto/ecrdsa.c:205] 	params = ecrdsa_unpack_u32(&paramlen,
+[linux/fs/pipe.c:251] 	 * (WF_SYNC), because we want them to get going and generate more
+[linux/mm/cma_sysfs.c:85] 		cma_kobj = kzalloc(sizeof(*cma_kobj), GFP_KERNEL);
+[linux/block/blk-mq-debugfs-zoned.c:19] 			seq_printf(m, "%u\n", i);
+[linux/block/bsg.c:5] #include <linux/module.h>
+[linux/lib/generic-radix-tree.c:28] static inline size_t genradix_depth_size(unsigned depth)
+[linux/lib/maple_tree.c:6088] EXPORT_SYMBOL_GPL(mas_find_rev);
+[linux/crypto/xor.c:135] 		printk(KERN_WARNING "xor: Yikes!  No memory available.\n");
+[linux/fs/dcache.c:1039] 			return alias;
+[linux/crypto/ecdh.c:123] 	return ctx->ndigits << (ECC_DIGITS_TO_BYTES_SHIFT + 1);
+[linux/crypto/scatterwalk.c:47] 		buf += len_this_page;
+[linux/crypto/algif_aead.c:234] 		 * Decryption operation - To achieve an in-place cipher
+[linux/scripts/recordmcount.c:693] 	/* Process each file in turn, allowing deep failure. */
+[linux/crypto/aes_ti.c:20] static void aesti_encrypt(struct crypto_tfm *tfm, u8 *out, const u8 *in)
+[linux/lib/flex_proportions.c:5]  *   Copyright (C) 2011, SUSE, Jan Kara <jack@suse.cz>
+[linux/lib/flex_proportions.c:207] 		percpu_counter_add_batch(&pl->events,
+[linux/lib/test_list_sort.c:19] #define TEST_POISON2 0xA324354C
+[linux/crypto/sm4_generic.c:91] MODULE_ALIAS_CRYPTO("sm4");
+[linux/lib/decompress.c:32] #ifndef CONFIG_DECOMPRESS_XZ
+[linux/mm/page_table_check.c:217] 				     PMD_SIZE >> PAGE_SHIFT,
+[linux/crypto/algif_aead.c:270] 			/* RX SGL present */
+[linux/init/initramfs.c:732] 	if (!initramfs_cookie) {
+[linux/block/blk-lib.c:157]  * The result is limited to a number of pages that can fit into a BIO.
+[linux/mm/ioremap.c:41] 	if (ioremap_page_range(vaddr, vaddr + size, phys_addr,
+[linux/kernel/stop_machine.c:177] 	enum multi_stop_state	state;
+[linux/mm/secretmem.c:168] 	struct inode *inode = d_inode(dentry);
+[linux/lib/crc-ccitt.c:74]     0x1080, 0x00A1, 0x30C2, 0x20E3, 0x5004, 0x4025, 0x7046, 0x6067,
+[linux/crypto/crct10dif_common.c:28] #include <linux/module.h>
+[linux/init/calibrate.c:55] 	 * will not do. As we don't really know whether jiffy switch
+[linux/mm/hugetlb.c:7006] 	 * Since this routine can be called in the evict inode path for all
+[linux/crypto/ecdh.c:164] 	.compute_shared_secret = ecdh_compute_value,
+[linux/kernel/notifier.c:245]  *	Returns true is notifier chain is empty, false otherwise.
+[linux/kernel/resource_kunit.c:99] 	resource_do_test(test, ret, &result, r->ret, &r->r, r->r1, r->r2);
+[linux/lib/ucmpdi2.c:13] 	if ((unsigned int) au.s.high < (unsigned int) bu.s.high)
+[linux/fs/d_path.c:352] 	if (need_seqretry(&rename_lock, seq)) {
+[linux/lib/test_bitmap.c:782] 	for_each_set_bit(bit, orig, 500)
+[linux/kernel/acct.c:550]  * @exitcode: task exit code
+[linux/block/early-lookup.c:112] static int __init devt_from_partlabel(const char *label, dev_t *devt)
+[linux/mm/hwpoison-inject.c:16] 	unsigned long pfn = val;
+[linux/mm/swap_cgroup.c:121]  * @nr_ents: number of swap entries to be recorded
+[linux/mm/memory-tiers.c:525] 		rcu_assign_pointer(pgdat->memtier, NULL);
+[linux/fs/libfs.c:981] 		size = scnprintf(attr->get_buf, sizeof(attr->get_buf),
+[linux/io_uring/epoll.c:33] 	epoll->fd = READ_ONCE(sqe->off);
+[linux/lib/bitmap.c:124] 		lower = src[off + k];
+[linux/block/blk-mq-sysfs.c:292] 	unsigned long i;
+[linux/block/blk-core.c:406] 	q->id = ida_alloc(&blk_queue_ida, GFP_KERNEL);
+[linux/lib/test_sort.c:37] 	KUNIT_CASE(test_sort),
+[linux/lib/fault-inject-usercopy.c:13] 	return setup_fault_attr(&fail_usercopy.attr, str);
+[linux/kernel/notifier.c:413] 	return notifier_chain_register(&nh->head, n, false);
+[linux/kernel/umh.c:233] 		down_read(&umhelper_sem);
+[linux/init/calibrate.c:251] static DEFINE_PER_CPU(unsigned long, cpu_loops_per_jiffy) = { 0 };
+[linux/mm/debug_page_ref.c:43] void __page_ref_freeze(struct page *page, int v, int ret)
+[linux/io_uring/filetable.c:33] 		table->alloc_hint = ctx->file_alloc_start;
+[linux/lib/test_meminit.c:86] 	(*total_failures)++;
+[linux/io_uring/filetable.c:59] 	table->files = NULL;
+[linux/lib/pm-notifier-error-inject.c:2] #include <linux/kernel.h>
+[linux/block/fops.c:683] 		error = -EOPNOTSUPP;
+[linux/init/init_task.c:145] #ifdef CONFIG_PREEMPT_RCU
+[linux/security/device_cgroup.c:473]  * parent_allows_removal - verify if it's ok to remove an exception
+[linux/fs/binfmt_elf_test.c:55] 	KUNIT_CASE(total_mapping_size_test),
+[linux/lib/bcd.c:5] unsigned _bcd2bin(unsigned char val)
+[linux/kernel/delayacct.c:99] static void delayacct_end(raw_spinlock_t *lock, u64 *start, u64 *total, u32 *count)
+[linux/crypto/ecrdsa.c:195] 	unsigned int ndigits;
+[linux/crypto/sha3_generic.c:52] 	bc[0] = st[0] ^ st[5] ^ st[10] ^ st[15] ^ st[20];
+[linux/lib/parman.c:174] 	to_index = item->index;
+[linux/lib/string.c:595]  * of a byte.  Remember that @count is the number of uint64_ts to
+[linux/lib/memory-notifier-error-inject.c:20] static struct dentry *dir;
+[linux/crypto/crypto_engine.c:447] 	kthread_queue_work(engine->kworker, &engine->pump_requests);
+[linux/lib/rbtree_test.c:283] 	time = time2 - time1;
+[linux/fs/binfmt_script.c:90] 	 * up now (on the assumption that the interpreter will want to load
+[linux/lib/hashtable_test.c:62] 	KUNIT_EXPECT_TRUE(test, hash_hashed(&b.node));
+[linux/mm/page_isolation.c:162] 	if (is_migrate_isolate_page(page)) {
+[linux/io_uring/tctx.c:292] 			start = reg.offset;
+[linux/fs/super.c:253] 	mutex_init(&s->s_vfs_rename_mutex);
