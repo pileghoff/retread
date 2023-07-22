@@ -1,11 +1,13 @@
 use std::fs;
+use std::path::PathBuf;
 
 use dap::base_message::Sendable;
 use dap::events::*;
 use dap::requests::*;
 use dap::responses::*;
 use dap::types::*;
-use glob::glob;
+use globwalk::GlobWalker;
+use globwalk::GlobWalkerBuilder;
 use regex::Regex;
 use serde_json::Value;
 
@@ -57,17 +59,38 @@ impl UninitializedState {
                 .context("Missing log_pattern")?
                 .as_str()
                 .context("log_pattern is not a valid string")?;
-            let include_pattern = data
+            let include_pattern: Result<Vec<_>> = data
                 .get("include")
                 .context("Missing include")?
-                .as_str()
-                .context("include is not a valid string")?;
+                .as_array()
+                .context("include is not a valid array")?
+                .iter()
+                .map(|v| {
+                    v.as_str()
+                        .context(format!("Include argument [{}] is not a valid string", v))
+                        .and_then(|v| Ok(v.to_string()))
+                })
+                .collect();
+
+            let exclude_pattern: Result<Vec<_>> = data
+                .get("exclude")
+                .context("Missing exclude")?
+                .as_array()
+                .context("include is not a valid array")?
+                .iter()
+                .map(|v| {
+                    v.as_str()
+                        .context(format!("Include argument [{}] is not a valid string", v))
+                        .and_then(|v| Ok(v.to_string()))
+                })
+                .collect();
 
             return Ok(LogSearchSettings {
                 log_file_name: log_file.to_string(),
                 log_file: fs::read_to_string(log_file)?,
                 log_pattern: Regex::new(regex)?,
-                include: include_pattern.to_string(),
+                include: include_pattern?,
+                exclude: exclude_pattern?,
             });
         }
         Err(anyhow!("Init message did not contain additional data"))
@@ -129,16 +152,23 @@ pub struct RunningState {
     breakpoints: Vec<RetreadBreakpoint>,
     running: bool,
     reverse: bool,
-    files: Vec<(String, String)>,
+    files: Vec<(PathBuf, String)>,
 }
 
 impl RunningState {
     pub fn new(settings: LogSearchSettings) -> Result<Self> {
-        let files = glob(&settings.include)?
-            .flatten()
-            .flat_map(|f| match std::fs::read_to_string(&f) {
-                Ok(c) => Some((f.to_str()?.to_string(), c)),
-                Err(_) => None,
+        let mut patterns = settings.include.clone();
+        patterns.extend(settings.exclude.iter().map(|p| "!".to_string() + p));
+        let file_paths: Result<Vec<_>> = GlobWalkerBuilder::from_patterns(".", &patterns)
+            .build()?
+            .map(|f| f.context("Reading dir entry"))
+            .collect();
+
+        let files: Result<Vec<_>> = file_paths?
+            .iter()
+            .map(|f| match std::fs::read_to_string(f.path()) {
+                Ok(c) => Ok((f.clone().into_path(), c)),
+                Err(e) => Err(anyhow!("{}", e)),
             })
             .collect();
 
@@ -148,7 +178,7 @@ impl RunningState {
             breakpoints: Vec::new(),
             running: false,
             reverse: false,
-            files,
+            files: files?,
         })
     }
 

@@ -163,8 +163,12 @@ fn test_breakpoints_10_lines_and_func() {
     let mut additional_data = serde_json::Map::new();
     additional_data.insert(
         "include".to_string(),
-        serde_json::Value::String("./linux/**/*.c".to_string()),
+        serde_json::Value::Array(vec![serde_json::Value::String(
+            "./linux/**/*.c".to_string(),
+        )]),
     );
+
+    additional_data.insert("exclude".to_string(), serde_json::Value::Array(Vec::new()));
     additional_data.insert(
         "log_file".to_string(),
         serde_json::Value::String("./linux.log".to_string()),
@@ -188,8 +192,12 @@ fn test_breakpoints_10_lines() {
     let mut additional_data = serde_json::Map::new();
     additional_data.insert(
         "include".to_string(),
-        serde_json::Value::String("./linux/**/*.c".to_string()),
+        serde_json::Value::Array(vec![serde_json::Value::String(
+            "./linux/**/*.c".to_string(),
+        )]),
     );
+
+    additional_data.insert("exclude".to_string(), serde_json::Value::Array(Vec::new()));
     additional_data.insert(
         "log_file".to_string(),
         serde_json::Value::String("./linux.log".to_string()),
@@ -211,8 +219,11 @@ fn test_breakpoints_in_source_lines() {
     let mut additional_data = serde_json::Map::new();
     additional_data.insert(
         "include".to_string(),
-        serde_json::Value::String("./linux/**/*.c".to_string()),
+        serde_json::Value::Array(vec![serde_json::Value::String(
+            "./linux/**/*.c".to_string(),
+        )]),
     );
+    additional_data.insert("exclude".to_string(), serde_json::Value::Array(Vec::new()));
     additional_data.insert(
         "log_file".to_string(),
         serde_json::Value::String("./linux.log".to_string()),

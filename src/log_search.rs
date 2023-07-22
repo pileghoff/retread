@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use anyhow::*;
 use rayon::prelude::{ParallelBridge, ParallelIterator};
 use regex::Regex;
@@ -78,7 +80,7 @@ fn token_lcs(haystack: &str, needle: &str) -> usize {
 
 fn best_match_in_file(
     contents: &str,
-    filename: &str,
+    filename: &PathBuf,
     search_options: &LogLineSearch,
 ) -> Option<LogMatch> {
     if let Some(ref func) = search_options.func {
@@ -96,7 +98,7 @@ fn best_match_in_file(
 
             if let Some(best) = scores.max_by(|a, b| a.1.cmp(&b.1)) {
                 return Some(LogMatch {
-                    file: filename.to_string(),
+                    file: filename.to_str().unwrap().to_string(),
                     line: best.0,
                     score: best.1,
                 });
@@ -107,7 +109,7 @@ fn best_match_in_file(
         Some(line) => {
             let l = contents.lines().nth(line - 1)?;
             Some(LogMatch {
-                file: filename.to_string(),
+                file: filename.to_str().unwrap().to_string(),
                 line,
                 score: token_lcs(l, &search_options.message),
             })
@@ -122,7 +124,8 @@ pub struct LogSearchSettings {
     pub log_file_name: String,
     pub log_file: String,
     pub log_pattern: Regex,
-    pub include: String,
+    pub include: Vec<String>,
+    pub exclude: Vec<String>,
 }
 
 use lazy_static::lazy_static;
@@ -132,7 +135,7 @@ lazy_static! {
 }
 
 pub fn search_files(
-    files: &[(String, String)],
+    files: &[(PathBuf, String)],
     log_pattern: &Regex,
     log_line: &str,
 ) -> Option<LogMatch> {
@@ -149,7 +152,7 @@ pub fn search_files(
             .par_bridge()
             .filter(|(f, _)| {
                 if let Some(file) = &search_options.file {
-                    return f.as_str() == file;
+                    return *f == PathBuf::from(file);
                 }
                 true
             })
