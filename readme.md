@@ -1,3 +1,4 @@
+<img align="left" width="80" height="80" src="https://raw.githubusercontent.com/pileghoff/retread/main/icon.svg">
 # Retread
 
 Retread is a log file replay and debugging tool designed to streamline the debugging process when only the  a log file is available. It offers an efficient solution for scenarios where reproducing defects is challenging or attaching a debugger is not feasible. By providing the ability to step through log messages and correlate them with the corresponding source code, Retread allows developers to gain crucial insights into the application's behavior.
