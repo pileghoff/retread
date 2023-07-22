@@ -82,8 +82,11 @@ fn token_lcs(haystack: &str, needle: &str) -> usize {
     lcs_res.into_iter().map(|(a, _b)| a.len()).sum::<usize>()
 }
 
-fn best_match_in_file(filename: &str, search_options: &LogLineSearch) -> Option<LogMatch> {
-    let contents = std::fs::read_to_string(filename).ok()?;
+fn best_match_in_file(
+    contents: &str,
+    filename: &str,
+    search_options: &LogLineSearch,
+) -> Option<LogMatch> {
     if let Some(ref func) = search_options.func {
         if !contents.contains(func) {
             return None;
@@ -137,25 +140,29 @@ lazy_static! {
     static ref SEARCH_CACHE: Cache<String, Option<LogMatch>> = Cache::new(10_000);
 }
 
-pub fn search_files(search_params: &LogSearchSettings, log_line: &str) -> Option<LogMatch> {
+pub fn search_files(
+    files: &Vec<(String, String)>,
+    search_params: &LogSearchSettings,
+    log_line: &str,
+) -> Option<LogMatch> {
     let cache = SEARCH_CACHE.clone();
 
     #[cfg(feature = "test-server")]
     cache.invalidate_all();
 
     cache.get_with(log_line.to_string(), || {
-        let mut files = glob(&search_params.include).ok()?;
         let search_options = LogLineSearch::new(&search_params.log_pattern, log_line).ok()?;
 
         let matches = files
-            .flatten()
-            .filter(|f| {
+            .iter()
+            .par_bridge()
+            .filter(|(f, c)| {
                 if let Some(file) = &search_options.file {
-                    return f.to_str().unwrap() == file;
+                    return f.as_str() == file;
                 }
                 true
             })
-            .flat_map(|f| best_match_in_file(f.to_str().unwrap(), &search_options));
+            .flat_map(|(f, c)| best_match_in_file(&c, &f, &search_options));
 
         matches.max_by(|a, b| a.score.cmp(&b.score))
     })

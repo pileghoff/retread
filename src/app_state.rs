@@ -7,6 +7,7 @@ use dap::events::*;
 use dap::requests::*;
 use dap::responses::*;
 use dap::types::*;
+use glob::glob;
 use regex::Regex;
 use serde_json::Value;
 
@@ -79,10 +80,10 @@ impl UninitializedState {
         Err(anyhow!("Init message did not contain additional data"))
     }
 
-    pub fn run(mut self) -> AppState {
+    pub fn run(&mut self) -> Option<AppState> {
         let request = match dap_server::read() {
             Some(req) => req,
-            None => return AppState::Uninitialized(self),
+            None => return None,
         };
         info!("Got: {:?}", request);
 
@@ -108,17 +109,17 @@ impl UninitializedState {
                 };
                 dap_server::write(Sendable::Response(resp));
 
-                if let Some(settings) = self.settings {
-                    let mut running_state = RunningState::new(settings);
+                if let Some(settings) = &self.settings {
+                    let mut running_state = RunningState::new(settings.clone());
                     running_state.init();
-                    return AppState::Running(running_state);
+                    return Some(AppState::Running(running_state));
                 }
             }
 
             _ => panic!("Invalid request"),
         }
 
-        AppState::Uninitialized(self)
+        None
     }
 }
 
@@ -130,10 +131,20 @@ pub struct RunningState {
     running: bool,
     reverse: bool,
     start: Instant,
+    files: Vec<(String, String)>,
 }
 
 impl RunningState {
     pub fn new(settings: LogSearchSettings) -> Self {
+        let files = glob(&settings.include)
+            .unwrap()
+            .flatten()
+            .flat_map(|f| match std::fs::read_to_string(&f) {
+                Ok(c) => Some((f.to_str().unwrap().to_string(), c)),
+                Err(_) => None,
+            })
+            .collect();
+
         RunningState {
             settings,
             log_index: 0,
@@ -141,17 +152,13 @@ impl RunningState {
             running: false,
             reverse: false,
             start: Instant::now(),
+            files,
         }
     }
 
     pub fn init(&mut self) {
         if let Some(log_line) = self.settings.log_file.lines().nth(self.log_index) {
             let settings = self.settings.clone();
-            spawn(move || {
-                for line in settings.log_file.lines() {
-                    search_files(&settings, line);
-                }
-            });
 
             self.stop(StoppedEventReason::Entry);
         }
@@ -200,8 +207,7 @@ impl RunningState {
     fn get_log_match(&mut self) -> LogMatch {
         loop {
             let log_line = self.settings.log_file.lines().nth(self.log_index).unwrap();
-            let line_search = self.get_log_line_search();
-            let res = search_files(&self.settings, log_line).unwrap();
+            let res = search_files(&self.files, &self.settings, log_line).unwrap();
             if res.score > 0 {
                 return res;
             }
@@ -225,7 +231,7 @@ impl RunningState {
         self.running = false;
     }
 
-    pub fn run(mut self) -> AppState {
+    pub fn run(&mut self) -> Option<AppState> {
         if self.running {
             self.increment_log_index();
             let m = self.get_log_match();
@@ -237,10 +243,7 @@ impl RunningState {
                 self.stop(StoppedEventReason::Breakpoint);
             }
         }
-        let request = match dap_server::read() {
-            Some(req) => req,
-            None => return AppState::Running(self),
-        };
+        let request = dap_server::read()?;
         info!("Got: {:?}", request);
 
         match request.command {
@@ -377,12 +380,12 @@ impl RunningState {
             }
             Command::Disconnect(_) => {
                 dap_server::write(Sendable::Response(request.ack().unwrap()));
-                return AppState::Exit;
+                return Some(AppState::Exit);
             }
 
             _ => panic!("Unhandled request"),
         }
-        AppState::Running(self)
+        None
     }
 }
 pub struct App {
@@ -397,10 +400,14 @@ impl App {
     }
 
     pub fn app_loop(&mut self) {
-        self.state = match self.state.clone() {
-            AppState::Uninitialized(s) => s.run(),
-            AppState::Running(s) => s.run(),
+        let res = match self.state {
+            AppState::Uninitialized(ref mut s) => s.run(),
+            AppState::Running(ref mut s) => s.run(),
             AppState::Exit => return,
         };
+
+        if let Some(s) = res {
+            self.state = s;
+        }
     }
 }

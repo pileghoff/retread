@@ -178,7 +178,7 @@ fn test_breakpoints_10_lines_and_func() {
 
     let breakpoints = vec![Breakpoint {
         path: "./linux.log".to_string(),
-        line: 10,
+        line: 30,
     }];
     run_test(additional_data, &breakpoints);
 }
@@ -201,7 +201,7 @@ fn test_breakpoints_10_lines() {
 
     let breakpoints = vec![Breakpoint {
         path: "./linux.log".to_string(),
-        line: 10,
+        line: 30,
     }];
     run_test(additional_data, &breakpoints);
 }
@@ -224,7 +224,7 @@ fn test_breakpoints_in_source_lines() {
 
     // Find line 10 in the source
     let contents = std::fs::read_to_string("./linux.log").unwrap();
-    let line = contents.lines().nth(9).unwrap();
+    let line = contents.lines().nth(30 - 1).unwrap();
     let regex = Regex::new(r"\[(?P<file>[^:]+):(?P<line>\d+)\] (?P<message>.*)$").unwrap();
     let line_number = regex
         .captures(line)
