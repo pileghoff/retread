@@ -6,8 +6,7 @@ use dap::events::*;
 use dap::requests::*;
 use dap::responses::*;
 use dap::types::*;
-use globwalk::GlobWalker;
-use globwalk::GlobWalkerBuilder;
+use glob::glob;
 use regex::Regex;
 use serde_json::Value;
 
@@ -159,18 +158,30 @@ impl RunningState {
     pub fn new(settings: LogSearchSettings) -> Result<Self> {
         let mut patterns = settings.include.clone();
         patterns.extend(settings.exclude.iter().map(|p| "!".to_string() + p));
-        let file_paths: Result<Vec<_>> = GlobWalkerBuilder::from_patterns(".", &patterns)
-            .build()?
-            .map(|f| f.context("Reading dir entry"))
+
+        let include = settings
+            .include
+            .iter()
+            .flat_map(|p| glob(p).unwrap())
+            .flatten();
+        let exclude: Vec<_> = settings
+            .exclude
+            .iter()
+            .flat_map(|p| glob(p).unwrap())
+            .flatten()
             .collect();
 
-        let files: Result<Vec<_>> = file_paths?
+        let file_paths: Vec<_> = include.filter(|p| !exclude.contains(p)).collect();
+        info!("Num paths: {}", file_paths.len());
+        let files: Vec<_> = file_paths
             .iter()
-            .map(|f| match std::fs::read_to_string(f.path()) {
-                Ok(c) => Ok((f.clone().into_path(), c)),
+            .flat_map(|f| match std::fs::read_to_string(f) {
+                Ok(c) => Ok((f.clone(), c)),
                 Err(e) => Err(anyhow!("{}", e)),
             })
             .collect();
+
+        files.iter().for_each(|(f, c)| info!("{}", f.display()));
 
         Ok(RunningState {
             settings,
@@ -178,7 +189,7 @@ impl RunningState {
             breakpoints: Vec::new(),
             running: false,
             reverse: false,
-            files: files?,
+            files,
         })
     }
 

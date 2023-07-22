@@ -10,7 +10,38 @@ Mapping log messages to source files is not an exact science. You can provide Re
 
 ## Setup
 
-### Vscode
+Retread uses the standardized [Debug adaptor protocol](https://microsoft.github.io/debug-adapter-protocol/overview), and can be used with any IDE that supports DAP. We have provided a VSCode extension that includes the Retread binary, for getting up and running.
 
-### Other
-todo
+For other systems, please not that we do currently support only support `launch` and not `attach` when initializing the debug adaptor.
+
+When sending the `launch` command, the following configurations options should be provided. These same configurations options should be set in the `launch.json` configuration in VSCode.
+
+### Configuration options
+
+- `log_file`, `string`: Path to the log file you wish to emulate.
+- `log_pattern`, `string`: Regex that tells Retread how to dissect each line of the log file. The regex uses named capture groups to analyses the log. The following named groups are supported:
+  - `message`: Required. Contains the logged message, without any metadata.
+  - `file`: Optional. Contains the path or name of the file where the message was logged.
+  - `line`: Optional. Contains the linenumber where the message was logged.
+  - `func`: Optional. Contains the name of the function where the message was logged.
+- `include`, `Array[string]`: An array of glob patterns, for all the source files to search.
+- `exclude`, `Array[string]`: An array of glob patterns, for all the source files to exclude from the search.
+
+Example config:
+```json
+{
+    "log_file": "~/my_log.txt",
+    "log_pattern": "\\[(?P<file>\\w+) : (?P<line>\\d+)\\] (?P<message>.*)$",
+    "include": ["./linux/**/*.c"],
+    "exclude": []
+}
+```
+
+This configuration will search for all C files in the linux source tree, and match using the following log format:
+
+```
+[linux/lib/clz_ctz.c:27] Log message example
+[linux/mm/memcontrol.c:5448] Hello world 
+[linux/crypto/hmac.c:84] Another log message
+...
+```

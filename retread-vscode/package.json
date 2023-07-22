@@ -4,11 +4,12 @@
   "description": "Retread is a debug adapter that allows you to replay log files in your IDE or editor of choice.",
   "publisher": "Pil Eghoff",
   "license": "GPL-2.0-or-later",
+  "icon" : "./icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/pileghoff/retread.git"
   },
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.79.0"
   },
@@ -45,7 +46,10 @@
         "configurationAttributes": {
           "launch": {
             "required": [
-              "log_file", "log_pattern", "include"
+              "log_file",
+              "log_pattern",
+              "include",
+              "exclude"
             ],
             "properties": {
               "log_file": {
@@ -61,9 +65,10 @@
             "type": "retread",
             "name": "Retread",
             "request": "launch",
-            "log_file": "${command:AskForLog}",
-            "log_pattern": "Insert regex",
-            "include": "Insert glob pattern for source files"
+            "log_file": "^\"\\${command:AskForLog}\"",
+            "log_pattern": "\\\\[(?P<file>\\\\w+) : (?P<line>\\\\d+)\\\\] (?P<message>.*)$",
+            "include": ["./linux/**/*.h"],
+            "exclude": []
           }
         ],
         "configurationSnippets": [
@@ -74,9 +79,10 @@
               "type": "retread",
               "name": "Retread",
               "request": "launch",
-              "log_file": "${command:AskForLog}",
-              "log_pattern": "Insert regex",
-              "include": "Insert glob pattern for source files"
+              "log_file": "^\"\\${command:AskForLog}\"",
+              "log_pattern": "\\\\[(?P<file>\\\\w+) : (?P<line>\\\\d+)\\\\] (?P<message>.*)$",
+              "include": ["./linux/**/*.h"],
+              "exclude": []
             }
           }
         ],
