@@ -1,12 +1,6 @@
 use anyhow::*;
-use glob::glob;
-use lcs;
-use rayon::{
-    prelude::{IntoParallelRefIterator, ParallelBridge, ParallelIterator},
-    *,
-};
+use rayon::prelude::{ParallelBridge, ParallelIterator};
 use regex::Regex;
-use std::{collections::HashMap, io::Lines, path::PathBuf, sync::Mutex};
 
 #[derive(Clone, Debug)]
 pub struct LogMatch {
@@ -26,7 +20,7 @@ pub struct LogLineSearch {
 impl LogLineSearch {
     pub fn new(pattern: &Regex, log_line: &str) -> Result<Self> {
         let captures = pattern
-            .captures(&log_line)
+            .captures(log_line)
             .context(format!("Regex did not match line: {}", log_line))?;
         Ok(LogLineSearch {
             message: captures
@@ -112,13 +106,11 @@ fn best_match_in_file(
         }
         Some(line) => {
             let l = contents.lines().nth(line - 1)?;
-            let b = Some(LogMatch {
+            Some(LogMatch {
                 file: filename.to_string(),
-                line: line,
+                line,
                 score: token_lcs(l, &search_options.message),
-            });
-
-            b
+            })
         }
     };
 
@@ -134,15 +126,14 @@ pub struct LogSearchSettings {
 }
 
 use lazy_static::lazy_static;
-use moka;
-use moka::{sync::Cache, Entry};
+use moka::sync::Cache;
 lazy_static! {
     static ref SEARCH_CACHE: Cache<String, Option<LogMatch>> = Cache::new(10_000);
 }
 
 pub fn search_files(
-    files: &Vec<(String, String)>,
-    search_params: &LogSearchSettings,
+    files: &[(String, String)],
+    log_pattern: &Regex,
     log_line: &str,
 ) -> Option<LogMatch> {
     let cache = SEARCH_CACHE.clone();
@@ -151,18 +142,18 @@ pub fn search_files(
     cache.invalidate_all();
 
     cache.get_with(log_line.to_string(), || {
-        let search_options = LogLineSearch::new(&search_params.log_pattern, log_line).ok()?;
+        let search_options = LogLineSearch::new(log_pattern, log_line).ok()?;
 
         let matches = files
             .iter()
             .par_bridge()
-            .filter(|(f, c)| {
+            .filter(|(f, _)| {
                 if let Some(file) = &search_options.file {
                     return f.as_str() == file;
                 }
                 true
             })
-            .flat_map(|(f, c)| best_match_in_file(&c, &f, &search_options));
+            .flat_map(|(f, c)| best_match_in_file(c, f, &search_options));
 
         matches.max_by(|a, b| a.score.cmp(&b.score))
     })

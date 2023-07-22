@@ -1,6 +1,4 @@
 use std::fs;
-use std::thread::spawn;
-use std::time::Instant;
 
 use dap::base_message::Sendable;
 use dap::events::*;
@@ -18,7 +16,6 @@ use anyhow::{anyhow, Context, Result};
 #[derive(Clone, Debug)]
 struct RetreadBreakpoint {
     path: String,
-    name: String,
     line: i64,
 }
 
@@ -26,10 +23,6 @@ impl RetreadBreakpoint {
     pub fn new(source: &Source, breakpoint: &SourceBreakpoint) -> Option<Self> {
         Some(RetreadBreakpoint {
             path: source.path.clone()?,
-            name: source
-                .clone()
-                .name
-                .unwrap_or(source.path.clone()?.split('/').last()?.to_string()),
             line: breakpoint.line,
         })
     }
@@ -80,10 +73,10 @@ impl UninitializedState {
         Err(anyhow!("Init message did not contain additional data"))
     }
 
-    pub fn run(&mut self) -> Option<AppState> {
+    pub fn run(&mut self) -> Result<Option<AppState>> {
         let request = match dap_server::read() {
             Some(req) => req,
-            None => return None,
+            None => return Ok(None),
         };
         info!("Got: {:?}", request);
 
@@ -103,23 +96,29 @@ impl UninitializedState {
                     Ok(s) => {
                         self.settings = Some(s);
                         dap_server::write(Sendable::Event(Event::Initialized));
-                        request.ack().unwrap()
+                        request.ack()?
                     }
                     Err(e) => request.error(&e.to_string()),
                 };
                 dap_server::write(Sendable::Response(resp));
 
                 if let Some(settings) = &self.settings {
-                    let mut running_state = RunningState::new(settings.clone());
-                    running_state.init();
-                    return Some(AppState::Running(running_state));
+                    let mut running_state = RunningState::new(settings.clone())?;
+                    running_state.init()?;
+                    return Ok(Some(AppState::Running(running_state)));
                 }
             }
 
             _ => panic!("Invalid request"),
         }
 
-        None
+        Ok(None)
+    }
+}
+
+impl Default for UninitializedState {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -130,43 +129,44 @@ pub struct RunningState {
     breakpoints: Vec<RetreadBreakpoint>,
     running: bool,
     reverse: bool,
-    start: Instant,
     files: Vec<(String, String)>,
 }
 
 impl RunningState {
-    pub fn new(settings: LogSearchSettings) -> Self {
-        let files = glob(&settings.include)
-            .unwrap()
+    pub fn new(settings: LogSearchSettings) -> Result<Self> {
+        let files = glob(&settings.include)?
             .flatten()
             .flat_map(|f| match std::fs::read_to_string(&f) {
-                Ok(c) => Some((f.to_str().unwrap().to_string(), c)),
+                Ok(c) => Some((f.to_str()?.to_string(), c)),
                 Err(_) => None,
             })
             .collect();
 
-        RunningState {
+        Ok(RunningState {
             settings,
             log_index: 0,
             breakpoints: Vec::new(),
             running: false,
             reverse: false,
-            start: Instant::now(),
             files,
-        }
+        })
     }
 
-    pub fn init(&mut self) {
-        if let Some(log_line) = self.settings.log_file.lines().nth(self.log_index) {
-            let settings = self.settings.clone();
-
-            self.stop(StoppedEventReason::Entry);
-        }
+    pub fn init(&mut self) -> Result<()> {
+        self.stop(StoppedEventReason::Entry)
     }
 
-    fn get_log_line_search(&self) -> LogLineSearch {
-        let log_line = self.settings.log_file.lines().nth(self.log_index).unwrap();
-        LogLineSearch::new(&self.settings.log_pattern, log_line).unwrap()
+    fn get_log_line_search(&self) -> Result<LogLineSearch> {
+        let log_line = self
+            .settings
+            .log_file
+            .lines()
+            .nth(self.log_index)
+            .context(format!(
+                "Unable to get line {} from log file",
+                self.log_index
+            ))?;
+        LogLineSearch::new(&self.settings.log_pattern, log_line)
     }
 
     fn get_log_file_source(&self) -> Source {
@@ -194,32 +194,43 @@ impl RunningState {
         });
     }
 
-    fn increment_log_index(&mut self) {
+    fn increment_log_index(&mut self) -> Result<()> {
         if self.reverse && self.log_index > 0 {
             self.log_index -= 1;
         } else if !self.reverse && self.log_index + 1 < self.settings.log_file.lines().count() {
             self.log_index += 1;
         } else if self.running {
-            self.stop(StoppedEventReason::Entry);
+            self.stop(StoppedEventReason::Entry)?;
         }
+
+        Ok(())
     }
 
-    fn get_log_match(&mut self) -> LogMatch {
+    fn get_log_match(&mut self) -> Result<LogMatch> {
         loop {
-            let log_line = self.settings.log_file.lines().nth(self.log_index).unwrap();
-            let res = search_files(&self.files, &self.settings, log_line).unwrap();
+            let log_line = self
+                .settings
+                .log_file
+                .lines()
+                .nth(self.log_index)
+                .context(format!(
+                    "Unable to get line {} from log file",
+                    self.log_index
+                ))?;
+            let res = search_files(&self.files, &self.settings.log_pattern, log_line)
+                .context("No match found")?;
             if res.score > 0 {
-                return res;
+                return Ok(res);
             }
 
-            self.increment_log_index();
+            self.increment_log_index()?;
         }
     }
 
-    fn stop(&mut self, reason: StoppedEventReason) {
+    fn stop(&mut self, reason: StoppedEventReason) -> Result<()> {
         let stop_event = Event::Stopped(StoppedEventBody {
-            reason: reason,
-            description: Some(self.get_log_line_search().message),
+            reason,
+            description: Some(self.get_log_line_search()?.message),
             thread_id: Some(0),
             preserve_focus_hint: Some(false),
             text: None,
@@ -229,45 +240,50 @@ impl RunningState {
 
         dap_server::write(Sendable::Event(stop_event));
         self.running = false;
+
+        Ok(())
     }
 
-    pub fn run(&mut self) -> Option<AppState> {
+    pub fn run(&mut self) -> Result<Option<AppState>> {
         if self.running {
-            self.increment_log_index();
-            let m = self.get_log_match();
+            self.increment_log_index()?;
+            let m = self.get_log_match()?;
             if self.breakpoints.iter().any(|b| {
                 (b.line == m.line as i64 && b.path == m.file)
                     || (b.line as usize == self.log_index + 1
                         && b.path == self.settings.log_file_name)
             }) {
-                self.stop(StoppedEventReason::Breakpoint);
+                self.stop(StoppedEventReason::Breakpoint)?;
             }
         }
-        let request = dap_server::read()?;
+        let request = match dap_server::read() {
+            Some(r) => r,
+            None => return Ok(None),
+        };
         info!("Got: {:?}", request);
 
         match request.command {
             Command::Next(_) | Command::StepIn(_) | Command::StepOut(_) => {
-                dap_server::write(Sendable::Response(request.ack().unwrap()));
-                self.stop(StoppedEventReason::Step);
+                dap_server::write(Sendable::Response(request.ack()?));
+                self.stop(StoppedEventReason::Step)?;
                 self.reverse = false;
-                self.increment_log_index();
+                self.increment_log_index()?;
             }
             Command::ReverseContinue(_) => {
-                dap_server::write(Sendable::Response(request.ack().unwrap()));
+                dap_server::write(Sendable::Response(request.ack()?));
                 self.reverse = true;
                 self.running = true;
             }
             Command::StepBack(_) => {
-                dap_server::write(Sendable::Response(request.ack().unwrap()));
-                self.stop(StoppedEventReason::Step);
+                dap_server::write(Sendable::Response(request.ack()?));
+                self.stop(StoppedEventReason::Step)?;
                 self.reverse = true;
-                self.increment_log_index();
+                self.increment_log_index()?;
             }
             Command::Pause(_) => {
                 self.running = false;
-                dap_server::write(Sendable::Response(request.ack().unwrap()));
-                self.stop(StoppedEventReason::Pause);
+                dap_server::write(Sendable::Response(request.ack()?));
+                self.stop(StoppedEventReason::Pause)?;
             }
             Command::Continue(_) => {
                 self.reverse = false;
@@ -280,16 +296,22 @@ impl RunningState {
             }
 
             Command::StackTrace(_) => {
-                let log_match = self.get_log_match();
-                let search_options = self.get_log_line_search();
+                let log_match = self.get_log_match()?;
+                let search_options = self.get_log_line_search()?;
+                let name = log_match
+                    .file
+                    .split('/')
+                    .last()
+                    .context(format!("Unable to parse path {}", log_match.file))?
+                    .to_string();
                 let source = Source {
-                    name: Some(log_match.file.split('/').last().unwrap().to_string()),
                     path: Some(log_match.file.clone()),
+                    name: Some(name.clone()),
                     ..Default::default()
                 };
                 let frame_name = match search_options.func {
                     Some(func) => format!("{}:{}", func, log_match.line),
-                    None => format!("{}:{}", source.clone().name.unwrap(), log_match.line),
+                    None => format!("{}:{}", name, log_match.line),
                 };
 
                 let frame = StackFrame {
@@ -307,7 +329,10 @@ impl RunningState {
                         .log_file_name
                         .split('/')
                         .last()
-                        .unwrap()
+                        .context(format!(
+                            "Unable to parse path {}",
+                            self.settings.log_file_name
+                        ))?
                         .to_string(),
                     source: Some(self.get_log_file_source()),
                     line: (self.log_index + 1) as i64,
@@ -333,7 +358,7 @@ impl RunningState {
             }
             Command::Scopes(ref args) => {
                 if args.frame_id == 0 {
-                    let log_match = self.get_log_match();
+                    let log_match = self.get_log_match()?;
 
                     let scope = Scope {
                         name: "Locals".to_string(),
@@ -356,10 +381,10 @@ impl RunningState {
                     ));
                 }
             }
-            Command::Variables(ref args) => {
+            Command::Variables(_) => {
                 let var = Variable {
                     name: "Variable name".to_string(),
-                    value: self.get_log_line_search().message,
+                    value: self.get_log_line_search()?.message,
                     ..Default::default()
                 };
                 dap_server::write(Sendable::Response(request.success(
@@ -379,13 +404,13 @@ impl RunningState {
                 }
             }
             Command::Disconnect(_) => {
-                dap_server::write(Sendable::Response(request.ack().unwrap()));
-                return Some(AppState::Exit);
+                dap_server::write(Sendable::Response(request.ack()?));
+                return Ok(Some(AppState::Exit));
             }
 
             _ => panic!("Unhandled request"),
         }
-        None
+        Ok(None)
     }
 }
 pub struct App {
@@ -399,15 +424,17 @@ impl App {
         }
     }
 
-    pub fn app_loop(&mut self) {
+    pub fn app_loop(&mut self) -> Result<()> {
         let res = match self.state {
-            AppState::Uninitialized(ref mut s) => s.run(),
-            AppState::Running(ref mut s) => s.run(),
-            AppState::Exit => return,
+            AppState::Uninitialized(ref mut s) => s.run()?,
+            AppState::Running(ref mut s) => s.run()?,
+            AppState::Exit => return Ok(()),
         };
 
         if let Some(s) = res {
             self.state = s;
         }
+
+        Ok(())
     }
 }

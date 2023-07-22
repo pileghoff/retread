@@ -7,13 +7,14 @@ mod log_search;
 extern crate log;
 
 use crate::app_state::{App, AppState};
-use anyhow::{anyhow, Context, Error, Result};
 fn main() {
-    dap_logger::init();
+    dap_logger::init().unwrap();
     log_panics::init();
 
     let mut app = App::init();
     while !matches!(app.state, AppState::Exit) {
-        app.app_loop();
+        if let Err(e) = app.app_loop() {
+            error!("{}", e);
+        }
     }
 }

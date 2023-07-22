@@ -1,7 +1,6 @@
 use crossbeam::channel::unbounded;
 use crossbeam::channel::Receiver;
 use crossbeam::channel::Sender;
-use crossbeam::channel::TryReadyError;
 use crossbeam::channel::TryRecvError;
 use std::io::{stdin, stdout, BufReader, BufWriter, Stdin, Stdout};
 use std::sync::Mutex;
