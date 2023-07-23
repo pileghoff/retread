@@ -20,14 +20,23 @@ When sending the `launch` command, the following configurations options should b
 
 ### Configuration options
 
-- `log_file`, `string`: Path to the log file you wish to emulate.
-- `log_pattern`, `string`: Regex that tells Retread how to dissect each line of the log file. The regex uses named capture groups to analyses the log. The following named groups are supported:
-  - `message`: Required. Contains the logged message, without any metadata.
-  - `file`: Optional. Contains the path or name of the file where the message was logged.
-  - `line`: Optional. Contains the linenumber where the message was logged.
-  - `func`: Optional. Contains the name of the function where the message was logged.
-- `include`, `Array[string]`: An array of glob patterns, for all the source files to search.
-- `exclude`, `Array[string]`: An array of glob patterns, for all the source files to exclude from the search.
+The following configuration options are supported.
+
+| Name          | Type          | Description                                                                                                                 |
+|---------------|---------------|-----------------------------------------------------------------------------------------------------------------------------|
+| `log_file`    | String        | Path to the log file you wish to emulate.2                                                                                  |
+| `log_pattern` | String        | Regex that tells Retread how to dissect each line of the log file. The regex uses named capture groups to analyses the log. |
+| `include`     | Array[String] | An array of glob patterns, for all the source files to search.                                                              |
+| `exclude`     | Array[String] | An array of glob patterns, for all the source files to exclude from the search.                                             |
+
+The following regex capture groups are supported.
+
+| Name      | Description                                                                    |
+|-----------|--------------------------------------------------------------------------------|
+| `message` | **Required**. Contains the logged message, without any metadata.               |
+| `file`    | Optional. Contains the path or name of the file where the message was logged.  |
+| `line`    | Optional. Contains the line number where the message was logged.               |
+| `func`    | Optional. Contains the name of the function where the message was logged.      |
 
 Example config:
 ```json
