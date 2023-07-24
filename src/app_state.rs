@@ -258,10 +258,11 @@ impl RunningState {
                     "Unable to get line {} from log file",
                     self.log_index
                 ))?;
-            let res = search_files(&self.files, &self.settings.log_pattern, log_line)
-                .context("No match found")?;
-            if res.score > 0 {
-                return Ok(res);
+            let res = search_files(&self.files, &self.settings.log_pattern, log_line);
+            if let Some(res) = res {
+                if res.score > 0 {
+                    return Ok(res);
+                }
             }
 
             self.increment_log_index()?;
