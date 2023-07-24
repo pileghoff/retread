@@ -245,9 +245,11 @@ impl RunningState {
             self.log_index -= 1;
         } else if !self.reverse && self.log_index + 1 < self.settings.log_file.lines().count() {
             self.log_index += 1;
-        } else if self.running {
+        } else {
             self.reverse = !self.reverse;
-            self.stop(StoppedEventReason::Entry)?;
+            if self.running {
+                self.stop(StoppedEventReason::Entry)?;
+            }
         }
 
         Ok(())
