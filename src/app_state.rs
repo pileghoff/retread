@@ -67,7 +67,7 @@ impl UninitializedState {
                 .map(|v| {
                     v.as_str()
                         .context(format!("Include argument [{}] is not a valid string", v))
-                        .and_then(|v| Ok(v.to_string()))
+                        .map(|v| v.to_string())
                 })
                 .collect();
 
@@ -80,7 +80,7 @@ impl UninitializedState {
                 .map(|v| {
                     v.as_str()
                         .context(format!("Include argument [{}] is not a valid string", v))
-                        .and_then(|v| Ok(v.to_string()))
+                        .map(|v| v.to_string())
                 })
                 .collect();
 
@@ -181,7 +181,7 @@ impl RunningState {
             })
             .collect();
 
-        files.iter().for_each(|(f, c)| info!("{}", f.display()));
+        files.iter().for_each(|(f, _c)| info!("{}", f.display()));
 
         Ok(RunningState {
             settings,
@@ -197,17 +197,22 @@ impl RunningState {
         self.stop(StoppedEventReason::Entry)
     }
 
-    fn get_log_line_search(&self) -> Result<LogLineSearch> {
-        let log_line = self
-            .settings
-            .log_file
-            .lines()
-            .nth(self.log_index)
-            .context(format!(
-                "Unable to get line {} from log file",
-                self.log_index
-            ))?;
-        LogLineSearch::new(&self.settings.log_pattern, log_line)
+    fn get_log_line_search(&mut self) -> Result<LogLineSearch> {
+        loop {
+            let log_line = self
+                .settings
+                .log_file
+                .lines()
+                .nth(self.log_index)
+                .context(format!(
+                    "Unable to get line {} from log file",
+                    self.log_index
+                ))?;
+            if let Ok(res) = LogLineSearch::new(&self.settings.log_pattern, log_line) {
+                return Ok(res);
+            }
+            self.increment_log_index().unwrap();
+        }
     }
 
     fn get_log_file_source(&self) -> Source {
@@ -241,6 +246,7 @@ impl RunningState {
         } else if !self.reverse && self.log_index + 1 < self.settings.log_file.lines().count() {
             self.log_index += 1;
         } else if self.running {
+            self.reverse = !self.reverse;
             self.stop(StoppedEventReason::Entry)?;
         }
 
