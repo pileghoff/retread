@@ -449,7 +449,8 @@ impl RunningState {
                 return Ok(Some(AppState::Exit));
             }
 
-            _ => panic!("Unhandled request"),
+            Command::SetExceptionBreakpoints(_) => {}
+            _ => error!("Unhandled request: {:?}", request),
         }
         Ok(None)
     }
