@@ -13,6 +13,7 @@
   "engines": {
     "vscode": "^1.79.0"
   },
+  "extensionKind": ["ui"],
   "categories": [
     "Debuggers"
   ],
