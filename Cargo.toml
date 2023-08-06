@@ -4,7 +4,9 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Pil Eghoff <pil@gmail.com>"]
 license = "GPL-2.0"
-
+description = "Retread is a debug adapter that allows you to replay log files in your IDE or editor of choice"
+homepage = "https://github.com/pileghoff/retread/"
+repository = "https://github.com/pileghoff/retread/"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
